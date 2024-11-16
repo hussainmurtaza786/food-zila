@@ -17,18 +17,20 @@ export default function Footer() {
     return (
         <Box>
             {/* First Footer Section */}
-            <Box 
-                bgColor="whitesmoke" 
-                p={{ base: 6, md: 10 }} 
-                display={{ base: 'block', md: 'flex' }} 
+            <Box
+                bgColor="whitesmoke"
+                p={{ base: 6, md: 10 }}
+                display={{ base: 'block', md: 'flex' }}
                 justifyContent="space-between"
             >
                 <Box mb={{ base: 6, md: 0 }}>
                     <Box m={4} mb={{ base: 2, md: 0 }}>
-                        <IoFastFoodOutline color="red" size="50px" />
+                        {/* <IoFastFoodOutline color="red" size="50px" />
                         <Text className={oswald.className} fontSize={{ base: '18px', md: '20px' }} fontFamily="body">
                             Food Zila
-                        </Text>
+                        </Text> */}
+                        <Image src="assets/foodzilla.png" w='100px' />
+
                     </Box>
                     <Box color="#00813d" fontSize={{ base: '14px', md: '18px' }} w={{ base: 'auto', md: '300px' }}>
                         <Text m={4}>We believe it has the power to do amazing things.</Text>
@@ -80,13 +82,13 @@ export default function Footer() {
             </Box>
 
             {/* Second Footer Section */}
-            <Box 
-                bgColor="#00813d" 
-                color="white" 
-                p={{ base: 6, md: 10 }} 
-                display="flex" 
-                justifyContent="space-between" 
-                flexDirection={{ base: 'column', md: 'row' }} 
+            <Box
+                bgColor="#00813d"
+                color="white"
+                p={{ base: 6, md: 10 }}
+                display="flex"
+                justifyContent="space-between"
+                flexDirection={{ base: 'column', md: 'row' }}
                 alignItems="center"
             >
                 <Box textAlign={{ base: 'center', md: 'left' }}>

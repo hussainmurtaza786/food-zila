@@ -1,10 +1,10 @@
 "use client";
-import { Box, Button, Text, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Button, Image, Text, useBreakpointValue } from "@chakra-ui/react";
 import Link from "next/link";
 import { IoFastFoodOutline } from "react-icons/io5";
 import { Oswald } from '@next/font/google';
 
-const oswald =  Oswald({ weight: '700', subsets: ['latin'] });
+const oswald = Oswald({ weight: '700', subsets: ['latin'] });
 
 export default function Navbar() {
     // Adjust font sizes based on screen size
@@ -21,9 +21,8 @@ export default function Navbar() {
         >
             {/* Logo */}
             <Box mb={{ base: 2, md: 0 }}>
-
-                <IoFastFoodOutline color="red" size='50px' />
-                <Text className={oswald.className} fontSize='20px' fontFamily='body'>Food Zila</Text>
+                <Image src="assets/foodzilla.png" w='100px' />
+               
             </Box>
 
             {/* Navigation Links */}
@@ -31,8 +30,8 @@ export default function Navbar() {
                 display="flex"
                 fontWeight="bold"
                 gap={10}
-                flexDirection={{ base: "column", md: "row" }} 
-                alignItems={{ base: "center", md: "flex-start" }} 
+                flexDirection={{ base: "column", md: "row" }}
+                alignItems={{ base: "center", md: "flex-start" }}
             >
                 <Text as={Link} href="/" color="text.default" _dark={{ color: "text._dark" }} fontSize={fontSize}>
                     Home
@@ -49,7 +48,7 @@ export default function Navbar() {
             </Box>
 
             {/* Admin Login Button */}
-            <Box mt={{ base: 2, md: 0 }}> 
+            <Box mt={{ base: 2, md: 0 }}>
                 <Button variant="solid" size="md">
                     Admin Login
                 </Button>
