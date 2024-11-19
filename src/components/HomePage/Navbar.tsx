@@ -1,7 +1,7 @@
 "use client";
 import { Box, Button, Image, Text, useBreakpointValue } from "@chakra-ui/react";
 import Link from "next/link";
-import { IoFastFoodOutline } from "react-icons/io5";
+
 import { Oswald } from '@next/font/google';
 
 const oswald = Oswald({ weight: '700', subsets: ['latin'] });
