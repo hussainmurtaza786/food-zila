@@ -1,8 +1,11 @@
 "use client";
 
+import store from "@/redux/store";
 import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { Montserrat } from 'next/font/google';
 import { Open_Sans } from 'next/font/google';
+import { Provider } from 'react-redux';
+
 
 // Load the fonts
 const montserrat = Montserrat({ weight: ['400', '700'], subsets: ['latin'] });
@@ -13,7 +16,7 @@ const theme = extendTheme({
     heading: montserrat.style.fontFamily, // Use the loaded font
     body: openSans.style.fontFamily, // Use the loaded font
   },
-  
+
   colors: {
     brand: {
       black: "#222",
@@ -48,7 +51,9 @@ const theme = extendTheme({
 export default function RootLayout(props: { children: React.ReactNode }) {
   return (
     <ChakraProvider theme={theme}>
-      {props.children}
+      <Provider store={store}>
+        {props.children}
+      </Provider>
     </ChakraProvider>
   );
 }

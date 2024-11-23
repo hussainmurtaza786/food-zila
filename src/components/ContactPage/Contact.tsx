@@ -1,4 +1,4 @@
-import { Box, Button, Input, Text, FormControl, FormLabel, useBreakpointValue, Image } from "@chakra-ui/react";
+import { Box, Button, Input, Text, FormControl, FormLabel, Image } from "@chakra-ui/react";
 import { Patrick_Hand } from '@next/font/google';
 import { FaPaperPlane, FaRegUser } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";

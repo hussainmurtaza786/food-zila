@@ -26,7 +26,7 @@ model AdminUser {
 
 model Product {
   id          String     @id @default(cuid()) @db.VarChar(50)
-  name        String     @unique @db.VarChar(50)
+  slug        String     @unique @db.VarChar(50)
   title       String     @db.VarChar(50)
   price       Float
   imgUrl      String?
