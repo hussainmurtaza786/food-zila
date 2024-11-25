@@ -10,7 +10,7 @@ type AdminLogin = {
     email: string;
     password: string;
 };
-const adminLoginThunk = createAsyncThunk<User, AdminLogin, { rejectValue: string }>(
+export const adminLoginThunk = createAsyncThunk<User, AdminLogin, { rejectValue: string }>(
     "auth/adminLogin",
     async ({ email, password }: AdminLogin, { rejectWithValue }) => {
         try {
@@ -19,9 +19,15 @@ const adminLoginThunk = createAsyncThunk<User, AdminLogin, { rejectValue: string
                 throw new Error("Something went wrong");
             }
 
-            const users: User[] = await usersRes.json();
+            const users = await usersRes.json();
 
-            const user = users.find((user) => user.email === email);
+            // Access the user array correctly
+            const userArray = users.data || []; // Update key if different
+            if (!Array.isArray(userArray)) {
+                throw new Error("Invalid API response format.");
+            }
+
+            const user = userArray.find((user) => user.email === email);
             if (!user) {
                 throw new Error("Invalid Email address");
             }
@@ -36,6 +42,7 @@ const adminLoginThunk = createAsyncThunk<User, AdminLogin, { rejectValue: string
         }
     }
 );
+
 
 const ADMIN_USER_CONNECTION_STRING = `http://localhost:3000/api/admin/users`;
 

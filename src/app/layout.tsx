@@ -20,10 +20,10 @@ export default function RootLayout({
       <body>
         <Provider>
           <Box overflowX="hidden">
-            <Navbar />
+            {/* <Navbar /> */}
             {children}
           </Box>
-          <Footer />
+          {/* <Footer /> */}
         </Provider>
       </body>
     </html>
