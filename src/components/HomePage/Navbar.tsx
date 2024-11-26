@@ -16,7 +16,6 @@ export default function Navbar() {
             justifyContent="space-between"
             alignItems="center"
             p={2}
-            bg=""
             flexDirection={{ base: "column", md: "row" }}
         >
             {/* Logo */}

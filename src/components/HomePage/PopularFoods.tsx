@@ -47,7 +47,7 @@ export default function PopularFoods() {
     };
 
     return (
-        <Box>
+        <Box> 
             <Box bgColor="whitesmoke" py={8} px={4}>
                 <Heading as="h1" textAlign="center" mb={8} fontSize={["2xl", "3xl", "4xl"]} color="gray.700">
                     POPULAR FOOD ITEMS

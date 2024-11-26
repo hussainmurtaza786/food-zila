@@ -19,8 +19,8 @@ export default function RootLayout({
       <head />
       <body>
         <Provider>
-          <Box overflowX="hidden">
-            {/* <Navbar /> */}
+          <Box >
+            <Navbar />
             {children}
           </Box>
           {/* <Footer /> */}

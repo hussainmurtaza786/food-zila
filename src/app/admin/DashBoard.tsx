@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   Box,
@@ -8,21 +10,39 @@ import {
   Spinner,
   useToast,
 } from "@chakra-ui/react";
-import DashBoardTable from "./Table";
+import DashBoardTable from "./DashBoardTable";
+import { Oswald, Patrick_Hand, Merriweather } from '@next/font/google';
+const oswald = Oswald({ weight: "700", subsets: ["latin-ext"] });
+
+const patrick_hand = Patrick_Hand({ weight: "400", subsets: ['latin-ext'] });
+const merriweather = Merriweather({ weight: "700", subsets: ['latin'] })
+type Product = {
+  id: string;
+  title: string;
+  price: number;
+  imgUrl: string;
+  description: string;
+};
 
 export default function DashBoard() {
+  const [products, setProducts] = useState<Product[]>([]);
   const [showTable, setShowTable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const toast = useToast();
 
   const handleShowTable = async () => {
-    setLoading(true); // Show loading spinner
-    setError(null); // Reset error state
+    setLoading(true);
+    setError(null);
 
     try {
-      await fetchData(); // Simulate data fetching
-      setShowTable(true); // Display the table
+      const response = await fetch("http://localhost:3000/api/admin/products");
+      if (!response.ok) {
+        throw new Error("Failed to fetch products");
+      }
+      const data = await response.json();
+      setProducts(data.products);
+      setShowTable(true);
     } catch (err) {
       setError("Failed to load the data. Please try again.");
       toast({
@@ -33,17 +53,8 @@ export default function DashBoard() {
         isClosable: true,
       });
     } finally {
-      setLoading(false); // Stop spinner
+      setLoading(false);
     }
-  };
-
-  const fetchData = async () => {
-    // Simulated server-side data fetch
-    return new Promise((resolve, reject) =>
-      setTimeout(() => {
-        Math.random() > 0.2 ? resolve(true) : reject(new Error("Fetch failed"));
-      }, 1000)
-    );
   };
 
   return (
@@ -56,9 +67,9 @@ export default function DashBoard() {
           p={8}
           boxShadow="xl"
         >
-          <Heading fontSize="3xl" mb={6} color="teal.600">
+          <Text className={patrick_hand.className} fontSize="5xl" mb={6} color="teal.600">
             Dashboard
-          </Heading>
+          </Text>
 
           <Text
             fontSize="2xl"
@@ -66,10 +77,11 @@ export default function DashBoard() {
             mb={4}
             cursor="pointer"
             onClick={handleShowTable}
+            className={oswald.className}
           >
             Product List
           </Text>
-          <Text fontSize="2xl" fontWeight="bold" mb={4}>
+          <Text className={merriweather.className} fontSize="2xl" fontWeight="bold" mb={4}>
             UI Components
           </Text>
 
@@ -92,6 +104,7 @@ export default function DashBoard() {
               color="white"
               fontWeight="bold"
               textAlign="center"
+              className={patrick_hand.className}
             >
               Welcome to the Dashboard
             </Text>
@@ -108,7 +121,7 @@ export default function DashBoard() {
                 {error}
               </Text>
             ) : showTable ? (
-              <DashBoardTable />
+              <DashBoardTable products={products} />
             ) : (
               <Text textAlign="center" color="gray.500">
                 Click on "Product List" to load the table.

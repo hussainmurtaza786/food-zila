@@ -12,11 +12,9 @@ const fadeIn = keyframes`
 
 const FoodPoster = () => {
   return (
-    <Box position="relative" w="100%" height='100%' overflow='hidden'>
+    <Box position="relative" w="100%" height='100%' overflow="hidden">
 
-      <Image alt="background" src="/assets/bg-red.jpg" w="100%" h="auto" />
-
-
+      <Image alt="background" src="/assets/bg-red.jpg" w="100%"  />
 
       <Box
         position="absolute"

@@ -4,6 +4,7 @@ import { Oswald } from "@next/font/google";
 export async function ProductList() {
   const response = await fetch("http://localhost:3000/api/admin/products", {
     cache: "no-cache",
+
   });
   const data = await response.json();
   return data.products;
