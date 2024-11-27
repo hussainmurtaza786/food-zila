@@ -31,7 +31,7 @@ export default function AdminPage() {
     dispatch(adminLoginThunk({ email, password }));
   };
 
-  if (!isAuthenticated) {
+  if (isAuthenticated) {
     return <DashBoard />;
   }
 

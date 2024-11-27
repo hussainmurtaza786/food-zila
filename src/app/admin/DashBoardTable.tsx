@@ -1,30 +1,11 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Table,
-  TableCaption,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  Flex,
-  Image,
-  Button,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Input,
-} from "@chakra-ui/react";
+import { Box, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, Flex, Image, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
-// import { addProduct, updateProduct, deleteProduct } from .";
+import { AppDispatch } from "@/redux/store";
 import { Oswald, Nunito } from "@next/font/google";
+import { deleteProduct, updateProduct, addProduct } from "@/redux/slices/admin/productSlice";
+import { Formik, Form, Field } from "formik";
+import * as Yup from "yup";
 
 type Product = {
   id: string;
@@ -37,28 +18,85 @@ type Product = {
 const oswald = Oswald({ weight: "700", subsets: ["latin-ext"] });
 const nunito = Nunito({ weight: "400", subsets: ["latin-ext"] });
 
-export default function DashBoardTable({ products }: { products: Product[] }) {
-  const dispatch = useDispatch();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [form, setForm] = useState<Product | Partial<Product>>({});
-  const [editing, setEditing] = useState(false);
+// Utility function to convert title to slug
+const generateSlug = (title: string) => {
+  return title
+    .toLowerCase()
+    .replace(/\s+/g, "-") 
+    .replace(/[^\w-]+/g, ""); 
+};
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+
+const addProductSchema = Yup.object().shape({
+  title: Yup.string().required("Title is Required"),
+  description: Yup.string().required("Description is Required"),
+  imgUrl: Yup.string().required("Image URL is Required"),
+  price: Yup.number().min(1, "Price should be greater than 1").required("Price is Required"),
+});
+
+const updateProductSchema = Yup.object().shape({
+  title: Yup.string().required("Title is Required"),
+  description: Yup.string().required("Description is Required"),
+  imgUrl: Yup.string().required("Image URL is Required"),
+  price: Yup.number().min(1, "Price should be greater than 1").required("Price is Required"),
+});
+
+export default function DashBoardTable({ products }: { products: Product[] }) {
+  const dispatch = useDispatch<AppDispatch>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [editing, setEditing] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+
+  const deleteData = async (id: string) => {
+    try {
+      await dispatch(deleteProduct(id)).unwrap();
+    } catch (err) {
+      console.error("Failed to delete product:", err);
+    }
   };
 
-  
-
-  const openModal = (product?: Product) => {
-    if (product) {
-      setForm(product);
-      setEditing(true);
-    } else {
-      setForm({});
-      setEditing(false);
-    }
+  const openAddModal = () => {
+    setSelectedProduct(null);
+    setEditing(false);
     onOpen();
+  };
+
+  const openEditModal = (product: Product) => {
+    setSelectedProduct(product);
+    setEditing(true);
+    onOpen();
+  };
+
+
+  const addData = async (values: any) => {
+    try {
+
+      await dispatch(addProduct(values)).unwrap();
+      onClose();
+    } catch (err) {
+      console.error("Failed to add product:", err);
+    }
+  };
+
+
+  const updateData = async (values: Product) => {
+    try {
+      const response = await fetch(`/api/products/${values.id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      if (response.ok) {
+        console.log("Product updated successfully");
+        onClose();
+      } else {
+        console.error("Failed to update product");
+      }
+    } catch (err) {
+      console.error("Failed to update product:", err);
+    }
   };
 
   return (
@@ -72,7 +110,7 @@ export default function DashBoardTable({ products }: { products: Product[] }) {
         boxShadow="xl"
         sx={{ fontFamily: nunito.style.fontFamily }}
       >
-        <Button colorScheme="teal" onClick={() => openModal()} mb={4}>
+        <Button colorScheme="teal" onClick={openAddModal} mb={4}>
           Add Product
         </Button>
         <TableContainer>
@@ -102,7 +140,7 @@ export default function DashBoardTable({ products }: { products: Product[] }) {
                     <Button
                       size="sm"
                       colorScheme="blue"
-                      onClick={() => openModal(item)}
+                      onClick={() => openEditModal(item)}
                       mr={2}
                     >
                       Edit
@@ -110,7 +148,7 @@ export default function DashBoardTable({ products }: { products: Product[] }) {
                     <Button
                       size="sm"
                       colorScheme="red"
-
+                      onClick={() => deleteData(item.id)}
                     >
                       Delete
                     </Button>
@@ -122,47 +160,84 @@ export default function DashBoardTable({ products }: { products: Product[] }) {
         </TableContainer>
       </Box>
 
-      {/* Modal for Add/Edit */}
+      {/* Modal for Add or Edit Product */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{editing ? "Edit Product" : "Add Product"}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input
-              placeholder="Title"
-              name="title"
-              value={form.title || ""}
-              onChange={handleInputChange}
-              mb={2}
-            />
-            <Input
-              placeholder="Price"
-              name="price"
-              type="number"
-              value={form.price || ""}
-              onChange={handleInputChange}
-              mb={2}
-            />
-            <Input
-              placeholder="Description"
-              name="description"
-              value={form.description || ""}
-              onChange={handleInputChange}
-              mb={2}
-            />
-            <Input
-              placeholder="Image URL"
-              name="imgUrl"
-              value={form.imgUrl || ""}
-              onChange={handleInputChange}
-            />
+            <Formik
+              initialValues={{
+                title: selectedProduct?.title || "",
+                price: selectedProduct?.price || 0,
+                description: selectedProduct?.description || "",
+                imgUrl: selectedProduct?.imgUrl || "",
+              }}
+              validationSchema={editing ? updateProductSchema : addProductSchema}
+              onSubmit={(values) => {
+                // Generate the slug from the title before submitting
+                const productWithSlug = { ...values, slug: generateSlug(values.title) };
+                if (editing && selectedProduct) {
+                  const updatedProduct = { ...productWithSlug, id: selectedProduct.id };
+                  updateData(updatedProduct);
+                } else {
+                  addData(productWithSlug);
+                }
+              }}
+            >
+              {({ values, handleChange, handleBlur, errors, touched }) => (
+                <Form>
+                  <Field
+                    name="title"
+                    as={Input}
+                    placeholder="Title"
+                    value={values.title}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.title && !!errors.title}
+                    mb={2}
+                  />
+                  <Field
+                    name="price"
+                    as={Input}
+                    type="number"
+                    placeholder="Price"
+                    value={values.price}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.price && !!errors.price}
+                    mb={2}
+                  />
+                  <Field
+                    name="description"
+                    as={Input}
+                    placeholder="Description"
+                    value={values.description}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.description && !!errors.description}
+                    mb={2}
+                  />
+                  <Field
+                    name="imgUrl"
+                    as={Input}
+                    placeholder="Image URL"
+                    value={values.imgUrl}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    isInvalid={touched.imgUrl && !!errors.imgUrl}
+                    mb={2}
+                  />
+                  <ModalFooter>
+                    <Button type="submit" colorScheme="teal">
+                      {editing ? "Update Product" : "Add Product"}
+                    </Button>
+                  </ModalFooter>
+                </Form>
+              )}
+            </Formik>
           </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="teal" >
-              {editing ? "Update" : "Add"}
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </Flex>
