@@ -81,8 +81,8 @@ export default function DashBoardTable({ products }: { products: Product[] }) {
 
   const updateData = async (values: Product) => {
     try {
-      const response = await fetch(`/api/products/${values.id}`, {
-        method: "PUT",
+      const response = await fetch("http://localhost:3000/api/admin/products", {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },

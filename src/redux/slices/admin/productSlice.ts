@@ -7,6 +7,7 @@ type Product = {
   price: number;
   imgUrl: string;
   description: string;
+
 };
 
 
@@ -40,7 +41,7 @@ export const fetchProducts = createAsyncThunk<Product[]>(
 export const addProduct = createAsyncThunk<Product, Product>(
   "products/add",
   async (product) => {
-    console.log("product",product)
+    console.log("product", product)
     const response = await fetch(API_URL, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -52,26 +53,28 @@ export const addProduct = createAsyncThunk<Product, Product>(
 );
 
 
-export const updateProduct = createAsyncThunk(
-    "products/update",
-    async (product: Product) => {
+export const updateProduct = createAsyncThunk<Product, Product>(
+  "products/update",
+  async (product) => {
+    console.log("product",product)
+    console.log("update product", product);
+    const response = await fetch(API_URL, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(product),
+    });
 
-      const response = await fetch("http://localhost:3000/api/admin/products", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(product),
-      });
-  
-      if (!response.ok) {
-        throw new Error(`Failed to update product: ${response.statusText}`);
-      }
-  
-      const updatedProduct = await response.json();
-      console.log("updatedProduct",updatedProduct)
-      return updatedProduct;
+    if (!response.ok) {
+      throw new Error(`Failed to update product: ${response.statusText}`);
     }
-  );
-  
+
+    const data = await response.json();
+    console.log("updatedProduct", data.product);
+    return data.product; 
+  }
+);
+
+
 
 
 
@@ -85,12 +88,12 @@ export const deleteProduct = createAsyncThunk<{ id: string }, string>(
     });
 
     if (!response.ok) {
-      const errorText = await response.text(); 
+      const errorText = await response.text();
       throw new Error(`Error: ${response.status} - ${errorText}`);
     }
 
 
-    const responseBody = await response.json(); 
+    const responseBody = await response.json();
     console.log("Response Body:", responseBody);
 
     return { id: responseBody.product.id };
