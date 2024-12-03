@@ -1,3 +1,4 @@
+// "use server"
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 
 type User = {
@@ -10,6 +11,8 @@ type AdminLogin = {
     email: string;
     password: string;
 };
+const ADMIN_USER_CONNECTION_STRING = `http://localhost:3000/api/admin/users`;
+
 export const adminLoginThunk = createAsyncThunk<User, AdminLogin, { rejectValue: string }>(
     "auth/adminLogin",
     async ({ email, password }: AdminLogin, { rejectWithValue }) => {
@@ -21,8 +24,8 @@ export const adminLoginThunk = createAsyncThunk<User, AdminLogin, { rejectValue:
 
             const users = await usersRes.json();
 
-            // Access the user array correctly
-            const userArray = users.data || []; // Update key if different
+
+            const userArray = users.data || [];
             if (!Array.isArray(userArray)) {
                 throw new Error("Invalid API response format.");
             }
@@ -44,7 +47,6 @@ export const adminLoginThunk = createAsyncThunk<User, AdminLogin, { rejectValue:
 );
 
 
-const ADMIN_USER_CONNECTION_STRING = `http://localhost:3000/api/admin/users`;
 
 const initialState = {
     isAuthenticated: false,

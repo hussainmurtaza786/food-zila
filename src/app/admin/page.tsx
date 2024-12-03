@@ -1,5 +1,4 @@
-'use client';
-
+"use client"
 import {
   Box,
   Text,
@@ -11,24 +10,41 @@ import {
   Alert,
   AlertIcon,
 } from "@chakra-ui/react";
-import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import { adminLoginThunk } from "../../redux/slices/admin/adminSlice"; // Adjust the path if necessary
-import { AppDispatch, RootState } from "../../redux/store"; // Adjust the path if necessary
 import DashBoard from "./DashBoard";
 
 export default function AdminPage() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { isAuthenticating, error, isAuthenticated } = useSelector(
-    (state: RootState) => state.auth
-  );
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(adminLoginThunk({ email, password }));
+    setError("");
+    setIsLoading(true);
+
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "Login failed");
+      }
+
+      // Store the token in localStorage or context
+      localStorage.setItem("authToken", data.token);
+      setIsAuthenticated(true);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isAuthenticated) {
@@ -52,9 +68,8 @@ export default function AdminPage() {
         w="sm"
       >
         <Text fontSize="lg" fontWeight="bold" mb={4}>
-          Access Restricted
+          Admin Login
         </Text>
-        <Text mb={6}>Please provide your email and password to continue.</Text>
         {error && (
           <Alert status="error" mb={4}>
             <AlertIcon />
@@ -85,9 +100,9 @@ export default function AdminPage() {
             colorScheme="teal"
             w="full"
             mt={4}
-            isLoading={isAuthenticating}
+            isLoading={isLoading}
           >
-            Submit
+            Login
           </Button>
         </Box>
       </Box>

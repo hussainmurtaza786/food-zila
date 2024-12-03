@@ -1,5 +1,27 @@
 import React, { useState } from "react";
-import { Box, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, Flex, Image, Button, useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Table,
+  TableCaption,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  Flex,
+  Image,
+  Button,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
+  Input,
+} from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
 import { Oswald, Nunito } from "@next/font/google";
@@ -7,6 +29,7 @@ import { deleteProduct, updateProduct, addProduct } from "@/redux/slices/admin/p
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 
+// Type for a product
 type Product = {
   id: string;
   title: string;
@@ -23,9 +46,8 @@ const generateSlug = (title: string) => {
   return title
     .toLowerCase()
     .replace(/\s+/g, "-") 
-    .replace(/[^\w-]+/g, ""); 
+    .replace(/[^\w-]+/g, "");
 };
-
 
 const addProductSchema = Yup.object().shape({
   title: Yup.string().required("Title is Required"),
@@ -41,15 +63,17 @@ const updateProductSchema = Yup.object().shape({
   price: Yup.number().min(1, "Price should be greater than 1").required("Price is Required"),
 });
 
-export default function DashBoardTable({ products }: { products: Product[] }) {
+export default function DashBoardTable({ products: initialProducts }: { products: Product[] }) {
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [products, setProducts] = useState<Product[]>(initialProducts);
   const [editing, setEditing] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   const deleteData = async (id: string) => {
     try {
       await dispatch(deleteProduct(id)).unwrap();
+      setProducts(products.filter((product) => product.id !== id)); // Update state locally
     } catch (err) {
       console.error("Failed to delete product:", err);
     }
@@ -67,33 +91,25 @@ export default function DashBoardTable({ products }: { products: Product[] }) {
     onOpen();
   };
 
-
   const addData = async (values: any) => {
     try {
-
-      await dispatch(addProduct(values)).unwrap();
+      const newProduct = await dispatch(addProduct(values)).unwrap();
+      setProducts([...products, newProduct]); // Add new product locally
       onClose();
     } catch (err) {
       console.error("Failed to add product:", err);
     }
   };
 
-
   const updateData = async (values: Product) => {
     try {
-      const response = await fetch("http://localhost:3000/api/admin/products", {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-      if (response.ok) {
-        console.log("Product updated successfully");
-        onClose();
-      } else {
-        console.error("Failed to update product");
-      }
+      const updatedProduct = await dispatch(updateProduct(values)).unwrap();
+      setProducts(
+        products.map((product) =>
+          product.id === updatedProduct.id ? updatedProduct : product
+        )
+      ); // Update product locally
+      onClose();
     } catch (err) {
       console.error("Failed to update product:", err);
     }
@@ -134,7 +150,12 @@ export default function DashBoardTable({ products }: { products: Product[] }) {
                     {item.description}
                   </Td>
                   <Td whiteSpace="normal" maxWidth="400px" wordBreak="break-word">
-                    <Image src={item.imgUrl} alt={item.title} maxWidth="150px" />
+                    <Image
+                      borderRadius="12px"
+                      src={item.imgUrl}
+                      alt={item.title}
+                      maxWidth="150px"
+                    />
                   </Td>
                   <Td>
                     <Button
@@ -176,7 +197,6 @@ export default function DashBoardTable({ products }: { products: Product[] }) {
               }}
               validationSchema={editing ? updateProductSchema : addProductSchema}
               onSubmit={(values) => {
-                // Generate the slug from the title before submitting
                 const productWithSlug = { ...values, slug: generateSlug(values.title) };
                 if (editing && selectedProduct) {
                   const updatedProduct = { ...productWithSlug, id: selectedProduct.id };
