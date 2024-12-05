@@ -47,7 +47,7 @@ export default function PopularFoods() {
     };
 
     return (
-        <Box> 
+        <Box>
             <Box bgColor="whitesmoke" py={8} px={4}>
                 <Heading as="h1" textAlign="center" mb={8} fontSize={["2xl", "3xl", "4xl"]} color="gray.700">
                     POPULAR FOOD ITEMS
@@ -76,7 +76,7 @@ export default function PopularFoods() {
                                 width="100%"
                                 m={12}
                             >
-                                <Box  display="flex" justifyContent="center" alignItems="center">
+                                <Box display="flex" justifyContent="center" alignItems="center">
                                     <Image
                                         src={item.image}
                                         alt={item.name}
@@ -99,12 +99,13 @@ export default function PopularFoods() {
 
             <Box display='flex' flexWrap='wrap' justifyContent='center' mt={8}>
                 <Box m={4} borderRadius='25px' overflow='hidden' position='relative' w={["100%", "100%", "600px"]} h={["250px", "400px"]}>
-                    <Image src="assets/bg-black.jpeg" w='100%' h='100%' objectFit="cover" />
+                    <Image alt="bg-black" src="assets/bg-black.jpeg" w='100%' h='100%' objectFit="cover" />
                     <Box position='absolute' bottom='0'>
-                        <Image src="assets/bg-red.png" w='600px' h='400px' />
+                        <Image alt="bg-red" src="assets/bg-red.png" w='600px' h='400px' />
                     </Box>
-                    <Box position='absolute' top={['0', '6rem', "8rem", '0']} zIndex={1} right={["1rem", "2rem", "0", "3rem"]}>
+                    <Box  position='absolute' top={['0', '6rem', "8rem", '0']} zIndex={1} right={["1rem", "2rem", "0", "3rem"]}>
                         <Image
+                            alt="burger-deal"
                             w={["200px", "250px", "250px", "350px"]}
                             h={["200px", "250px", "250px", "350px"]}
                             borderRadius='25px'
@@ -150,18 +151,19 @@ export default function PopularFoods() {
                 </Box>
 
                 <Box m={4} borderRadius='25px' overflow='hidden' position='relative' w={["100%", "100%", "600px"]} h={["250px", "400px"]}>
-                    <Image src="assets/bg-red.jpg" w='100%' h='100%' objectFit="cover" />
+                    <Image alt="bg" src="assets/bg-red.jpg" w='100%' h='100%' objectFit="cover" />
                     <Box position='absolute' top={['2rem', '1rem', '2rem']} right={['2rem', '0rem', "12rem", '2rem']}>
-                        <Image opacity='0.5' w={["40px", "70px"]} src="assets/mint-leaves.png" />
+                        <Image alt="mint" opacity='0.5' w={["40px", "70px"]} src="assets/mint-leaves.png" />
                     </Box>
                     <Box position='absolute' top={['15rem', '9rem', '11rem', "17rem"]} right='1rem'>
-                        <Image opacity='0.5' w={["60px", "100px"]} src="assets/chilli.png" />
+                        <Image alt="chilli" opacity='0.5' w={["60px", "100px"]} src="assets/chilli.png" />
                     </Box>
                     <Box position='absolute' top={['15rem', "15rem", "13rem", "15rem"]} left='2rem'>
-                        <Image opacity='0.5' w={["80px", "150px"]} src="assets/cheese.webp" />
+                        <Image alt="cheese" opacity='0.5' w={["80px", "150px"]} src="assets/cheese.webp" />
                     </Box>
                     <Box position='absolute' top={["1rem", "1rem", "0rem",]} zIndex={1} right={["1rem", "1rem", "0rem"]}>
                         <Image
+                            alt="pizza"
                             w={["50px", "150px", "220px", "350px"]}
                             h={["10px", "150px", "220px", "350px"]}
                             borderRadius='25px'
@@ -178,7 +180,7 @@ export default function PopularFoods() {
             </Box>
 
             <Box w='100%' h={{ base: '300px', md: '400px', lg: '500px' }} position='relative'>
-                <Image src="assets/bg-black.jpeg" w='100%' h='100%' objectFit="cover" />
+                <Image alt="bg" src="assets/bg-black.jpeg" w='100%' h='100%' objectFit="cover" />
 
                 <Box
                     position='absolute'
@@ -189,22 +191,22 @@ export default function PopularFoods() {
                     borderRadius='25px'
                     overflow='hidden'
                 >
-                    <Image src="assets/grilled.png" />
+                    <Image alt="grilled" src="assets/grilled.png" />
                 </Box>
 
                 <Box position='absolute' bottom={{ base: '1rem', md: '1.5rem' }} right={{ base: '2rem', md: '6rem' }} w={{ base: '0px', md: '150px' }}>
-                    <Image src="assets/chilli.png" />
+                    <Image alt="chilli" src="assets/chilli.png" />
                 </Box>
 
                 <Box position='absolute' top={{ base: '5rem', md: '7rem' }} right={{ base: '2rem', md: '30rem' }} w={{ base: '0px', md: '150px' }} transform='rotate(180deg)'>
-                    <Image src="assets/chilli.png" />
+                    <Image alt="chilli" src="assets/chilli.png" />
                 </Box>
 
                 <Box position='absolute' top={{ base: '2rem', md: '4rem' }} right={{ base: '1rem', md: '12rem' }}>
-                    <Image src="assets/today_best_deals.png" />
+                    <Image alt="today-best-deal" src="assets/today_best_deals.png" />
                 </Box>
                 <Box position='absolute' bottom='0' right='0' w='150px'>
-                    <Image src="assets/tomato-shape.png" />
+                    <Image alt="tomato" src="assets/tomato-shape.png" />
                 </Box>
 
                 <Box position='absolute' top={{ base: '8rem', md: '10rem' }} left={{ base: '2rem', md: '5rem' }} color='white' fontSize={{ base: '30px', md: '40px', lg: '60px' }} w={{ base: '80%', md: '500px' }}>
@@ -225,16 +227,7 @@ export default function PopularFoods() {
                         ORDER NOW
                     </Button>
                 </Box>
-                {/* <Box className={nunito.className} position='absolute' bottom={{ base: '3rem', md: '4.5rem' }} left={{ base: '2rem', md: '5rem' }}>
-        <Button
-            w={{ base: '100px', md: '120px', lg: '150px', xl: '200px' }}
-            display="flex"
-            gap={2}
-            h={{ base: '30px', md: '40px', lg: '50px', xl: '60px' }}
-        >
-            ORDER NOW
-        </Button>
-    </Box> */}
+               
             </Box>
 
 

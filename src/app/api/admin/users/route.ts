@@ -23,40 +23,45 @@ export const GET = async (req: NextRequest) => {
         // { status: 200 }
     )
 }
-
 export const PUT = async (req: NextRequest) => {
-    const { id, email, name, password, phoneNumber, products }: Prisma.AdminUserCreateInput = await req.json();
+  const { id, email, name, password, phoneNumber, products, role }: Prisma.AdminUserCreateInput = await req.json();
 
-    try {
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
+  try {
+      // If no role is provided, default to "STAFF"
+      const userRole = role || "STAFF";  // Default to STAFF if no role is provided
 
-        const user = await prisma.adminUser.create({
-            data: {
-                id,
-                email,
-                name,
-                password: hashedPassword,
-                phoneNumber,
-                products,
-            },
-            select: { id: true, email: true, name: true, phoneNumber: true },
-        });
+      // Hash the password
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
 
-        // Generate a JWT
-        const token = generateToken({ id: user.id, email: user.email });
+      // Create the user in the database
+      const user = await prisma.adminUser.create({
+          data: {
+              id,
+              email,
+              name: name || "New User", // Default name if none provided
+              password: hashedPassword,
+              phoneNumber,
+              role: userRole, // Set the role to the provided or default "STAFF"
+              products,
+          },
+          select: { id: true, email: true, name: true, phoneNumber: true, password: true, role: true }, // Include role in response
+      });
 
-        return Response.json(
-            { user, token },
-            { status: 201 }
-        );
-    } catch (err: any) {
-        console.log("Error:", err.message);
-        return Response.json(
-            { error: err.message },
-            { status: 400 }
-        );
-    }
+      // Generate a JWT
+      const token = generateToken({ id: user.id, email: user.email, role: user.role });
+
+      return Response.json(
+          { user, token },
+          { status: 201 }
+      );
+  } catch (err: any) {
+      console.log("Error:", err.message);
+      return Response.json(
+          { error: err.message },
+          { status: 400 }
+      );
+  }
 };
 
 

@@ -1,26 +1,7 @@
 import React, { useState } from "react";
 import {
-  Box,
-  Table,
-  TableCaption,
-  TableContainer,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr,
-  Flex,
-  Image,
-  Button,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Input,
+  Box, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, Flex, Image, Button,
+  useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
@@ -45,7 +26,7 @@ const nunito = Nunito({ weight: "400", subsets: ["latin-ext"] });
 const generateSlug = (title: string) => {
   return title
     .toLowerCase()
-    .replace(/\s+/g, "-") 
+    .replace(/\s+/g, "-")
     .replace(/[^\w-]+/g, "");
 };
 
@@ -63,7 +44,7 @@ const updateProductSchema = Yup.object().shape({
   price: Yup.number().min(1, "Price should be greater than 1").required("Price is Required"),
 });
 
-export default function DashBoardTable({ products: initialProducts }: { products: Product[] }) {
+export default function ProductTable({ products: initialProducts }: { products: Product[] }) {
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -108,7 +89,7 @@ export default function DashBoardTable({ products: initialProducts }: { products
         products.map((product) =>
           product.id === updatedProduct.id ? updatedProduct : product
         )
-      ); // Update product locally
+      );
       onClose();
     } catch (err) {
       console.error("Failed to update product:", err);

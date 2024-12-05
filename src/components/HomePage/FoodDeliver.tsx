@@ -14,7 +14,7 @@ export default function FoodDeliver() {
 
                 {/* Delivery Man Image */}
                 <Box position="absolute" bottom="0" right="0" w={["50%", "40%", "100%", "50%"]} zIndex={10}>
-                    <Image src="assets/delivery-man.png" w="100%" />
+                    <Image alt="delivery-man" src="assets/delivery-man.png" w="100%" />
                 </Box>
 
                 {/* Text and Button */}

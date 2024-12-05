@@ -2,9 +2,9 @@
 import { Box, Button, Image, Text, useBreakpointValue } from "@chakra-ui/react";
 import Link from "next/link";
 
-import { Oswald } from '@next/font/google';
+// import { Oswald } from '@next/font/google';
 
-const oswald = Oswald({ weight: '700', subsets: ['latin'] });
+// const oswald = Oswald({ weight: '700', subsets: ['latin'] });
 
 export default function Navbar() {
     // Adjust font sizes based on screen size
@@ -20,7 +20,7 @@ export default function Navbar() {
         >
             {/* Logo */}
             <Box mb={{ base: 2, md: 0 }}>
-                <Image src="assets/foodzilla.png" w='100px' />
+                <Image alt='foodzilla' src="assets/foodzilla.png" w='100px' />
                
             </Box>
 

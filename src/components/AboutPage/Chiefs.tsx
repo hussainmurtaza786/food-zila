@@ -20,23 +20,24 @@ export default function Chief() {
         <Box display="flex">
           <Box m={2} display="flex" flexDir="column">
             <Box
-            pos='relative'
+              pos='relative'
               width="100%"
               position="relative"
               borderRadius="12px"
               overflow="hidden"
-              _groupHover={{ opacity: 0.6 }} 
+              _groupHover={{ opacity: 0.6 }}
             >
               <Image
+                alt="chief1"
                 src="assets/chief-1.jpg"
                 width="100%"
                 height="auto"
                 transition="opacity 0.3s ease"
                 _groupHover={{ opacity: 0.6 }}
-                _hover={{opacity:'0.6'}}
+                _hover={{ opacity: '0.6' }}
               />
 
-              
+
               <Box
                 position="absolute"
                 bottom="0"
@@ -45,13 +46,13 @@ export default function Chief() {
                 gap="1rem"
                 zIndex='1'
                 transition="opacity 0.3s ease"
-              cursor='pointer'
-              color='white'
+                cursor='pointer'
+                color='white'
               >
-                <FaFacebook   size="2rem" />
-                <FaInstagram  size="2rem" />
-                <FaTwitter  size="2rem" />
-                <FaYoutube  size="2rem" />
+                <FaFacebook size="2rem" />
+                <FaInstagram size="2rem" />
+                <FaTwitter size="2rem" />
+                <FaYoutube size="2rem" />
               </Box>
             </Box>
 
@@ -69,24 +70,25 @@ export default function Chief() {
             </Box>
           </Box>
           <Box m={2}>
-          <Box
-            pos='relative'
+            <Box
+              pos='relative'
               width="100%"
               position="relative"
               borderRadius="12px"
               overflow="hidden"
-              _groupHover={{ opacity: 0.6 }} 
+              _groupHover={{ opacity: 0.6 }}
             >
               <Image
+              alt="chief2"
                 src="assets/chief-2.jpg"
                 width="100%"
                 height="auto"
                 transition="opacity 0.3s ease"
                 _groupHover={{ opacity: 0.6 }}
-                _hover={{opacity:'0.6'}}
+                _hover={{ opacity: '0.6' }}
               />
 
-              
+
               <Box
                 position="absolute"
                 bottom="0"
@@ -95,15 +97,15 @@ export default function Chief() {
                 gap="1rem"
                 zIndex='1'
                 opacity="1"
-                _groupHover={{ opacity: 1 }} 
+                _groupHover={{ opacity: 1 }}
                 transition="opacity 0.3s ease"
-              cursor='pointer'
-              color='white  '
+                cursor='pointer'
+                color='white  '
               >
-                <FaFacebook  size="2rem" />
-                <FaInstagram  size="2rem" />
-                <FaTwitter  size="2rem" />
-                <FaYoutube  size="2rem" />
+                <FaFacebook size="2rem" />
+                <FaInstagram size="2rem" />
+                <FaTwitter size="2rem" />
+                <FaYoutube size="2rem" />
               </Box>
             </Box>
             <Box m="4" textAlign="center">
@@ -120,24 +122,25 @@ export default function Chief() {
             </Box>
           </Box>
           <Box m={2}>
-          <Box
-            pos='relative'
+            <Box
+              pos='relative'
               width="100%"
               position="relative"
               borderRadius="12px"
               overflow="hidden"
-              _groupHover={{ opacity: 0.6 }} 
+              _groupHover={{ opacity: 0.6 }}
             >
               <Image
+              alt="chief2"
                 src="assets/chief-3.jpg"
                 width="100%"
                 height="auto"
                 transition="opacity 0.3s ease"
-                _groupHover={{ opacity: 2,  bgColor:'black'}}
-                _hover={{opacity:'0.6'}}
+                _groupHover={{ opacity: 2, bgColor: 'black' }}
+                _hover={{ opacity: '0.6' }}
               />
 
-              
+
               <Box
                 position="absolute"
                 bottom="0"
@@ -146,15 +149,15 @@ export default function Chief() {
                 gap="1rem"
                 zIndex='1'
                 opacity="1"
-                _groupHover={{ opacity: 1 }} 
+                _groupHover={{ opacity: 1 }}
                 transition="opacity 0.3s ease"
-              color='white'
-              cursor='pointer'
+                color='white'
+                cursor='pointer'
               >
-                <FaFacebook  size="2rem" />
-                <FaInstagram  size="2rem" />
-                <FaTwitter  size="2rem" />
-                <FaYoutube  size="2rem" />
+                <FaFacebook size="2rem" />
+                <FaInstagram size="2rem" />
+                <FaTwitter size="2rem" />
+                <FaYoutube size="2rem" />
               </Box>
             </Box>
             <Box m="4" textAlign="center">

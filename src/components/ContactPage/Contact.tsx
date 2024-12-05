@@ -10,7 +10,7 @@ export default function Contact() {
   return (
     <Box display='flex' flexDirection='column' bgColor='whitesmoke'>
       <Box position='relative'>
-        <Image width='100%' h='500px' src="assets/con-banner.jpg" />
+        <Image alt="contact-banner" width='100%' h='500px' src="assets/con-banner.jpg" />
         <Text className={patrick_hand.className} position='absolute' top='9.5rem' right='20rem' color='white' fontSize='80px'>CONTACT US</Text>
       </Box>
       <Box w='100%' display='flex' justifyContent='center' alignItems='center'>

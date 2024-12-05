@@ -1,5 +1,5 @@
 import { Box, Image, Text } from "@chakra-ui/react";
-import { Patrick_Hand, Oswald, Inter, Roboto } from '@next/font/google';
+import { Patrick_Hand, Oswald, Roboto } from '@next/font/google';
 import { IoFastFoodOutline } from "react-icons/io5";
 import { RiUserStarLine } from "react-icons/ri";
 
@@ -12,13 +12,13 @@ export default function About() {
         <Box bgColor='whitesmoke'>
             <Box>
                 <Box position='relative'>
-                    <Image width='100%' h='500px' src="assets/con-banner.jpg" />
+                    <Image alt="contact" width='100%' h='500px' src="assets/con-banner.jpg" />
                     <Text className={patrick_hand.className} position='absolute' top='9.5rem' right='20rem' color='white' fontSize='80px'>ABOUT US</Text>
                 </Box>
 
                 <Box display='flex'>
                     <Box>
-                        <Image src="assets/burger.png" />
+                        <Image alt="burger" src="assets/burger.png" />
                     </Box>
                     <Box mt='3rem'>
                         <Box w='500px' className={oswald.className} >

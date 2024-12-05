@@ -1,9 +1,11 @@
-"use client";
+"use client"
 
 import store from "@/redux/store";
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import { Montserrat } from 'next/font/google';
-import { Open_Sans } from 'next/font/google';
+import { ChakraProvider } from "@chakra-ui/react";
+import { extendTheme } from "@chakra-ui/react";
+
+import { Montserrat,Open_Sans } from 'next/font/google';
+
 import { Provider } from 'react-redux';
 
 

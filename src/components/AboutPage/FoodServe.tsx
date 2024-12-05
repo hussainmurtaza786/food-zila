@@ -17,19 +17,19 @@ export default function FoodServe() {
       </Flex>
       <Flex justify='center' align='center' gap={10}>
         <Flex justify='center' align='center' direction='column' textAlign='center' _hover={{bgColor:"#ffb936", transition:"0.4s ease-in-out"}} p={7} borderRadius='12px'>
-            <Image src="assets/pizza-about.png"/>
+            <Image alt="pizza" src="assets/pizza-about.png"/>
             <Text className={oswald.className} fontWeight='bold' fontSize='20px' mb='2'>COOKING WITH CARE</Text>
             <Text w='300px'>It's the perfect dining experience where Experience quick and efficient</Text>
         </Flex>
        
         <Flex justify='center' align='center' direction='column' textAlign='center' bgColor="#ffb936"  p={7} borderRadius='12px'>
-            <Image src="assets/pizza-2.png"/>
+            <Image alt="pizza2" src="assets/pizza-2.png"/>
             <Text className={oswald.className} fontWeight='bold' fontSize='20px' mb='2'>CHOOSE FOOD</Text>
             <Text w='300px'>It's the perfect dining experience where Experience quick and efficient</Text>
         </Flex>
        
         <Flex justify='center' align='center' direction='column' textAlign='center' _hover={{bgColor:"#ffb936", transition:"0.4s ease-in-out"}} p={7} borderRadius='12px'>
-            <Image src="assets/rider-about.png"/>
+            <Image alt="pizza" src="assets/rider-about.png"/>
             <Text className={oswald.className} fontWeight='bold' fontSize='20px' mb='2'>QUICK DELIVERY</Text>
             <Text w='300px'>It's the perfect dining experience where Experience quick and efficient</Text>
         </Flex>

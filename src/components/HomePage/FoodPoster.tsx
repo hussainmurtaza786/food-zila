@@ -14,16 +14,16 @@ const FoodPoster = () => {
   return (
     <Box position="relative" w="100%" height='100%' overflow="hidden">
 
-      <Image alt="background" src="/assets/bg-red.jpg" w="100%"  />
+      <Image alt="background" src="/assets/bg-red.jpg" w="100%" />
 
       <Box
         position="absolute"
         top={0}
         right={0}
         animation={`${fadeIn} 0.8s ease-in-out`}
-        display={["none", "block"]} 
+        display={["none", "block"]}
       >
-        <Image src="/assets/onion+tomato.png" w={["60%", "100%", "100%"]} />
+        <Image alt="onion & tomato" src="/assets/onion+tomato.png" w={["60%", "100%", "100%"]} />
       </Box>
 
       <Box
@@ -33,7 +33,7 @@ const FoodPoster = () => {
         animation={`${fadeIn} 1s ease-in-out`}
         zIndex={10}
       >
-        <Image src="/assets/left-shape.png" w={["60px", "80px", "100px", "120px"]} />
+        <Image alt="shape" src="/assets/left-shape.png" w={["60px", "80px", "100px", "120px"]} />
       </Box>
 
       <Box
@@ -82,7 +82,7 @@ const FoodPoster = () => {
           right={0}
           animation={`${fadeIn} 1.6s ease-in-out`}
         >
-          <Image src="/assets/burger.png" w={["80%", "90%", "100%"]} h="auto" />
+          <Image alt="burger" src="/assets/burger.png" w={["80%", "90%", "100%"]} h="auto" />
         </Box>
 
         <Box
@@ -92,7 +92,7 @@ const FoodPoster = () => {
           animation={`${fadeIn} 1.8s ease-in-out`}
           display={["none", "block"]} // Hide on mobile
         >
-          <Image src="/assets/burger-text.png" w={["200px", "250px", "300px"]} />
+          <Image alt="burger-text" src="/assets/burger-text.png" w={["200px", "250px", "300px"]} />
         </Box>
 
         <Box
@@ -102,6 +102,7 @@ const FoodPoster = () => {
           animation={`${fadeIn} 2s ease-in-out`}
         >
           <Image
+            alt="today-best-deal"
             src="/assets/today_best_deals.png"
             w={["200px", "250px", "300px"]}
             h="auto"

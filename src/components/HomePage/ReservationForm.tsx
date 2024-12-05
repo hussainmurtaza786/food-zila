@@ -9,7 +9,7 @@ export default function ReservationForm() {
         <Box>
             <Box position="relative" width="100%" h={{ base: 'auto', md: '600px' }} color='white' >
                 <Box w="100%" h="100%">
-                    <Image w="100%" h="100%" src="assets/bg-black.jpeg" objectFit="cover" />
+                    <Image alt='bg-img' w="100%" h="100%" src="assets/bg-black.jpeg" objectFit="cover" />
                 </Box>
 
                 {/* Title Text */}
