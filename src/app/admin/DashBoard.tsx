@@ -36,11 +36,12 @@ type Product = {
   description: string;
 };
 
-type User = {
+export type User = {
   id: string;
   name: string;
   email: string;
   phoneNumber: string;
+  role:string
 };
 
 const validationSchema = Yup.object({
@@ -50,7 +51,7 @@ const validationSchema = Yup.object({
   password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
 });
 
-export default function DashBoard({ userRole }: { userRole: string }) {  // Add userRole as a prop
+export default function DashBoard() {  // Add userRole as a prop
   const [products, setProducts] = useState<Product[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [showProductTable, setShowProductTable] = useState(false);
@@ -67,11 +68,13 @@ export default function DashBoard({ userRole }: { userRole: string }) {  // Add 
     setShowUserTable(false)
 
     try {
+      localStorage.setItem("","")
       const response = await fetch("http://localhost:3000/api/admin/users");
       if (!response.ok) {
         throw new Error("Failed to fetch users");
       }
       const data = await response.json();
+      console.log("data ==>",data)
       setUsers(data.data);
       setShowUserTable(true);
     } catch (err) {
@@ -153,14 +156,14 @@ export default function DashBoard({ userRole }: { userRole: string }) {  // Add 
           </Text>
 
           {/* "Create Account" Section - Render only if the user is an admin */}
-          {userRole === "admin" && (
+          {/* {userRole === "admin" && ( */}
             <Box>
               <Text className={merriweather.className} fontSize="xl" fontWeight="bold" mb={4}>
                 Make Account For Subordinate
               </Text>
               <Button colorScheme="teal" onClick={() => setIsModalOpen(true)}>Create Account</Button>
             </Box>
-          )}
+          {/* // )} */}
         </Box>
 
         {/* Main Content */}

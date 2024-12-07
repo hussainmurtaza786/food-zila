@@ -48,6 +48,7 @@ export const PUT = async (req: NextRequest) => {
           select: { id: true, email: true, name: true, phoneNumber: true, password: true, role: true }, // Include role in response
       });
 
+
       // Generate a JWT
       const token = generateToken({ id: user.id, email: user.email, role: user.role });
 

@@ -107,7 +107,7 @@ export default function UserTable({ users: initialUsers }: { users: User[] }) {
   };
 
 
-  console.log("users ==>", users)
+  // console.log("users ==>", users)
 
   return (
     <Flex justify="center" align="center" h="100%">

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Box,
   Text,
@@ -6,11 +6,11 @@ import {
   FormLabel,
   Input,
   Button,
-  Spinner,
   Alert,
   AlertIcon,
+  Spinner,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DashBoard from "./DashBoard";
 
 export default function AdminPage() {
@@ -20,25 +20,39 @@ export default function AdminPage() {
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  useEffect(() => {
+    // Check if the user is already authenticated by validating the token in cookies
+    const token = document.cookie.replace(
+      /(?:(?:^|.*;\s*)authToken\s*\=\s*([^;]*).*$)|^.*$/,
+      "$1"
+    );
+    if (token) {
+      setIsAuthenticated(true); // Skip login if valid token is found
+    }
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/admin/users", {
+      const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await res.json();
+      console.log("data ==>", data);
+
       if (!res.ok) {
         throw new Error(data.error || "Login failed");
       }
 
-      // Store the token in localStorage or context
-      localStorage.setItem("authToken", data.token);
+      // Store the token securely in cookies (HttpOnly cookie preferred)
+      document.cookie = `authToken=${data.token}; path=/; max-age=86400`; // 1 day expiry
+
       setIsAuthenticated(true);
     } catch (err: any) {
       setError(err.message);
@@ -46,6 +60,14 @@ export default function AdminPage() {
       setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+        <Spinner size="xl" />
+      </Box>
+    );
+  }
 
   if (isAuthenticated) {
     return <DashBoard />;

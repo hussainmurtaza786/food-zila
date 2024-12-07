@@ -27,7 +27,7 @@ export default function RootLayout(props: {
 }) {
 
 
-  console.log(" ========= `headers` =========")
+  // console.log(" ========= `headers` =========")
   const Header = headers().forEach((value, key) => {
     // console.log(key, ":", value);
     // console.log("Key ==>", key)
@@ -38,7 +38,7 @@ export default function RootLayout(props: {
 
   const isAdminPage = Boolean(host && path && path?.includes(`${host}/admin`));
   // console.log("is")
-  console.log("Props ==>", props)
+  // console.log("Props ==>", props)
 
   return (
     <html className={inter.className} suppressHydrationWarning>
