@@ -1,16 +1,6 @@
 "use client";
-import {
-  Box,
-  Text,
-  FormControl,
-  FormLabel,
-  Input,
-  Button,
-  Alert,
-  AlertIcon,
-  Spinner,
-} from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { Box, Text, FormControl, FormLabel, Input, Button, Alert, AlertIcon, Spinner, } from "@chakra-ui/react";
+import { useState } from "react";
 import DashBoard from "./DashBoard";
 
 export default function AdminPage() {
@@ -20,16 +10,6 @@ export default function AdminPage() {
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  useEffect(() => {
-    // Check if the user is already authenticated by validating the token in cookies
-    const token = document.cookie.replace(
-      /(?:(?:^|.*;\s*)authToken\s*\=\s*([^;]*).*$)|^.*$/,
-      "$1"
-    );
-    if (token) {
-      setIsAuthenticated(true); // Skip login if valid token is found
-    }
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

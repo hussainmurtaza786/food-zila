@@ -21,7 +21,7 @@
     "@prisma/adapter-pg": "^5.22.0",
     "@prisma/client": "^5.22.0",
     "@reduxjs/toolkit": "^2.3.0",
-    "axios": "^1.7.8",
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "formik": "^2.4.6",
