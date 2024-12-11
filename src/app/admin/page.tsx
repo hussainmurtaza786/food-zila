@@ -1,5 +1,5 @@
 "use client";
-import { Box, Text, FormControl, FormLabel, Input, Button, Alert, AlertIcon, Spinner, } from "@chakra-ui/react";
+import { Box, Text, FormControl, FormLabel, Input, Button, Alert, AlertIcon, Spinner } from "@chakra-ui/react";
 import { useState } from "react";
 import DashBoard from "./DashBoard";
 
@@ -9,7 +9,6 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,8 +29,11 @@ export default function AdminPage() {
         throw new Error(data.error || "Login failed");
       }
 
-      // Store the token securely in cookies (HttpOnly cookie preferred)
-      document.cookie = `authToken=${data.token}; path=/; max-age=86400`; // 1 day expiry
+      // Store the token in localStorage
+      if (data.token) {
+        localStorage.setItem("authToken", data.token);
+        console.log("JWT Token Stored in LocalStorage:", data.token); // Log the token for verification
+      }
 
       setIsAuthenticated(true);
     } catch (err: any) {

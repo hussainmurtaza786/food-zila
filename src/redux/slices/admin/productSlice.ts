@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
 
 type Product = {
   id: string;
@@ -12,8 +13,27 @@ type Product = {
 const API_URL = "http://localhost:3000/api/admin/products";
 
 const getToken = () => {
-  return localStorage.getItem("token");
+  const token = localStorage.getItem("authToken");
+  console.log("Retrieved token:", token);
+  return token;
 };
+
+
+const isTokenExpired = (token: string) => {
+  try {
+    const decoded: any = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    if (currentTime > decoded.exp) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.log(err);
+    return true;
+  }
+};
+
 
 interface ProductState {
   products: Product[];
@@ -25,15 +45,6 @@ const initialState: ProductState = {
   products: [],
   loading: false,
   error: null,
-};
-
-
-// Custom error for session expiration
-const handleSessionExpiredError = (error: any) => {
-  if (error.response && error.response.status === 401) {
-    throw new Error("Your session has expired. Please log in again.");
-  }
-  throw error;
 };
 
 // Fetch products
@@ -51,12 +62,18 @@ export const addProduct = createAsyncThunk(
   async (product: any, thunkAPI) => {
     try {
       const token = getToken();
-      const response = await axios.put("/api/admin/products", product, {
+      if (!token) throw new Error("No token found");
+      if (isTokenExpired(token)) throw new Error("Token has expired");
+
+      const response = await axios.put(API_URL, product, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       return response.data.product;
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || "Failed to add product"
+      );
     }
   }
 );
@@ -67,35 +84,44 @@ export const updateProduct = createAsyncThunk(
   async (product: any, thunkAPI) => {
     try {
       const token = getToken();
-      const response = await axios.patch("/api/admin/products", product, {
+      if (!token) throw new Error("No token found");
+      if (isTokenExpired(token)) throw new Error("Token has expired");
+
+      const response = await axios.patch(API_URL, product, {
         headers: { Authorization: `Bearer ${token}` },
       });
+
       return response.data.product;
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || "Failed to update product"
+      );
     }
   }
 );
 
-
 // Delete a product
-
 export const deleteProduct = createAsyncThunk(
   "products/deleteProduct",
   async (id: string, thunkAPI) => {
     try {
       const token = getToken();
-      const response = await axios.delete("/api/admin/products", {
-        data: { id },
+      if (!token) throw new Error("No token found");
+      if (isTokenExpired(token)) throw new Error("Token has expired");
+
+      await axios.delete(API_URL, {
         headers: { Authorization: `Bearer ${token}` },
+        data: { id }
       });
-      return response.data;
+
+      return { id };
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.response.data);
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || "Failed to delete product"
+      );
     }
   }
 );
-
 
 const productSlice = createSlice({
   name: "products",

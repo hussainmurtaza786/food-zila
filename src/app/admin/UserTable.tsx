@@ -86,6 +86,7 @@ export default function UserTable({ users: initialUsers }: { users: User[] }) {
         console.error("Failed to add user: Invalid user data", newUser);
       }
     } catch (err) {
+      console.log(err.response)
       console.error("Failed to add user:", err);
     }
   };

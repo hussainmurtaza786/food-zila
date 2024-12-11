@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import {
-  Box, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, Flex, Image, Button,
-  useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input
+  useToast, Box, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, Flex, Image, Button,
+  useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input,
+  Toast
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
@@ -30,6 +31,7 @@ const generateSlug = (title: string) => {
     .replace(/[^\w-]+/g, "");
 };
 
+
 const addProductSchema = Yup.object().shape({
   title: Yup.string().required("Title is Required"),
   description: Yup.string().required("Description is Required"),
@@ -45,20 +47,38 @@ const updateProductSchema = Yup.object().shape({
 });
 
 export default function ProductTable({ products: initialProducts }: { products: Product[] }) {
+  const toast = useToast();
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [editing, setEditing] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
+  const handleTokenExpiredError = (err: any) => {
+    if (err.message === "Token has expired. Please log in again.") {
+      toast({
+        title: "Session Expired",
+        description: "Your session has expired. Please log in again.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } else {
+      console.error("An error occurred:", err);
+    }
+  };
+
+  // Example of calling deleteData
   const deleteData = async (id: string) => {
     try {
       await dispatch(deleteProduct(id)).unwrap();
       setProducts(products.filter((product) => product.id !== id)); // Update state locally
-    } catch (err) {
-      console.error("Failed to delete product:", err);
+      onClose()
+    } catch (err: any) {
+      handleTokenExpiredError(err);
     }
   };
+
 
   const openAddModal = () => {
     setSelectedProduct(null);
@@ -78,6 +98,8 @@ export default function ProductTable({ products: initialProducts }: { products: 
       setProducts([...products, newProduct]); // Add new product locally
       onClose();
     } catch (err) {
+      handleTokenExpiredError(err);
+
       console.error("Failed to add product:", err);
     }
   };
@@ -92,6 +114,8 @@ export default function ProductTable({ products: initialProducts }: { products: 
       );
       onClose();
     } catch (err) {
+      handleTokenExpiredError(err);
+
       console.error("Failed to update product:", err);
     }
   };

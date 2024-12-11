@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import axios from "axios";
+import {jwtDecode} from "jwt-decode";
 
 type User = {
   id: string;
@@ -8,6 +10,24 @@ type User = {
 };
 
 const API_URL = "http://localhost:3000/api/admin/users";
+
+// Helper functions to check token
+const getToken = () => {
+  const token = localStorage.getItem("authToken");
+  console.log("Retrieved token:", token);
+  return token;
+};
+
+const isTokenExpired = (token: string) => {
+  try {
+    const decoded: any = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    return currentTime > decoded.exp;
+  } catch (err) {
+    console.log(err);
+    return true; // Treating invalid token as expired
+  }
+};
 
 interface UserState {
   users: User[];
@@ -23,54 +43,50 @@ const initialState: UserState = {
 
 // Fetch users
 export const fetchUsers = createAsyncThunk<User[]>("users/fetch", async () => {
-  const response = await fetch(API_URL);
-  const data = await response.json();
-  return data.users;
+  const token = getToken();
+  if (!token) throw new Error("No token found");
+  if (isTokenExpired(token)) throw new Error("Token has expired");
+
+  const response = await axios.get(API_URL, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data.users;
 });
 
 // Add user
 export const addUser = createAsyncThunk<User, Omit<User, "id">>("users/add", async (user) => {
-  const response = await fetch(API_URL, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(user),
-  });
-  const data = await response.json();
-  return data.user;
-});
+  const token = getToken();
+  if (!token) throw new Error("No token found");
+  if (isTokenExpired(token)) throw new Error("Token has expired");
 
+  const response = await axios.post(API_URL, user, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data.user;
+});
 
 // Update user
 export const updateUser = createAsyncThunk<User, User>("users/update", async (user) => {
-  const response = await fetch(API_URL, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(user),
+  const token = getToken();
+  if (!token) throw new Error("No token found");
+  if (isTokenExpired(token)) throw new Error("Token has expired");
+
+  const response = await axios.patch(API_URL, user, {
+    headers: { Authorization: `Bearer ${token}` },
   });
-
-  if (!response.ok) {
-    throw new Error(`Failed to update user: ${response.statusText}`);
-  }
-
-  const data = await response.json();
-  return data.user;
+  return response.data.user;
 });
 
 // Delete user
 export const deleteUser = createAsyncThunk<{ id: string }, string>("users/delete", async (id) => {
-  const response = await fetch(API_URL, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id }),
+  const token = getToken();
+  if (!token) throw new Error("No token found");
+  if (isTokenExpired(token)) throw new Error("Token has expired");
+
+  await axios.delete(API_URL, {
+    headers: { Authorization: `Bearer ${token}` },
   });
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Error: ${response.status} - ${errorText}`);
-  }
-
-  const responseBody = await response.json();
-  return { id: responseBody.user.id };
+  return { id };
 });
 
 // User slice
