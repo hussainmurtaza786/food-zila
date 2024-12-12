@@ -49,7 +49,7 @@ export default function RootLayout(props: {
 
             {!isAdminPage && <Navbar />}
             {props.children}
-            {/* {!isAdminPage && <Footer />} */}
+            {!isAdminPage && <Footer />}
           </Box>
         </Provider>
       </body>

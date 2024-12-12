@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import {
   useToast, Box, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, Flex, Image, Button,
-  useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input,
-  Toast
+  useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
@@ -54,19 +53,6 @@ export default function ProductTable({ products: initialProducts }: { products: 
   const [editing, setEditing] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
-  const handleTokenExpiredError = (err: any) => {
-    if (err.message === "Token has expired. Please log in again.") {
-      toast({
-        title: "Session Expired",
-        description: "Your session has expired. Please log in again.",
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-      });
-    } else {
-      console.error("An error occurred:", err);
-    }
-  };
 
   // Example of calling deleteData
   const deleteData = async (id: string) => {
@@ -75,7 +61,7 @@ export default function ProductTable({ products: initialProducts }: { products: 
       setProducts(products.filter((product) => product.id !== id)); // Update state locally
       onClose()
     } catch (err: any) {
-      handleTokenExpiredError(err);
+      console.log(err);
     }
   };
 
@@ -98,7 +84,8 @@ export default function ProductTable({ products: initialProducts }: { products: 
       setProducts([...products, newProduct]); // Add new product locally
       onClose();
     } catch (err) {
-      handleTokenExpiredError(err);
+      console.log(err);
+
 
       console.error("Failed to add product:", err);
     }
@@ -114,10 +101,12 @@ export default function ProductTable({ products: initialProducts }: { products: 
       );
       onClose();
     } catch (err) {
-      handleTokenExpiredError(err);
+      console.log(err);
+
 
       console.error("Failed to update product:", err);
     }
+
   };
 
   return (

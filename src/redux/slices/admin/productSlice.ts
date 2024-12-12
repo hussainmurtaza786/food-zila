@@ -1,3 +1,4 @@
+import handleTokenExpiry from "../../utils/TokenExpiry";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
@@ -50,9 +51,15 @@ const initialState: ProductState = {
 // Fetch products
 export const fetchProducts = createAsyncThunk<Product[]>(
   "products/fetch",
-  async () => {
-    const response = await axios.get(API_URL);
-    return response.data.products;
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get(API_URL);
+      return response.data.products;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || "Failed to fetch products"
+      );
+    }
   }
 );
 
@@ -63,7 +70,10 @@ export const addProduct = createAsyncThunk(
     try {
       const token = getToken();
       if (!token) throw new Error("No token found");
-      if (isTokenExpired(token)) throw new Error("Token has expired");
+      if (isTokenExpired(token)) {
+        handleTokenExpiry("Your session has expired. Please log in again.");
+        return;
+      }
 
       const response = await axios.put(API_URL, product, {
         headers: { Authorization: `Bearer ${token}` },
@@ -85,7 +95,10 @@ export const updateProduct = createAsyncThunk(
     try {
       const token = getToken();
       if (!token) throw new Error("No token found");
-      if (isTokenExpired(token)) throw new Error("Token has expired");
+      if (isTokenExpired(token)) {
+        handleTokenExpiry("Your session has expired. Please log in again.");
+        return;
+      }
 
       const response = await axios.patch(API_URL, product, {
         headers: { Authorization: `Bearer ${token}` },
@@ -99,22 +112,24 @@ export const updateProduct = createAsyncThunk(
     }
   }
 );
-
 // Delete a product
-export const deleteProduct = createAsyncThunk(
+export const deleteProduct = createAsyncThunk<{ id: string }, string, { rejectValue: string }>(
   "products/deleteProduct",
   async (id: string, thunkAPI) => {
     try {
       const token = getToken();
       if (!token) throw new Error("No token found");
-      if (isTokenExpired(token)) throw new Error("Token has expired");
+      if (isTokenExpired(token)) {
+        handleTokenExpiry("Your session has expired. Please log in again.");
+        return thunkAPI.rejectWithValue("Session expired");
+      }
 
       await axios.delete(API_URL, {
         headers: { Authorization: `Bearer ${token}` },
         data: { id }
       });
 
-      return { id };
+      return { id }; // Return the id after successful deletion
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
         error.response?.data?.message || error.message || "Failed to delete product"
@@ -122,6 +137,8 @@ export const deleteProduct = createAsyncThunk(
     }
   }
 );
+
+
 
 const productSlice = createSlice({
   name: "products",
