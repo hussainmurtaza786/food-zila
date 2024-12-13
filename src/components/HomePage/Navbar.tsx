@@ -46,12 +46,7 @@ export default function Navbar() {
                 </Text>
             </Box>
 
-            {/* Admin Login Button */}
-            <Box mt={{ base: 2, md: 0 }}>
-                <Button variant="solid" size="md">
-                    Admin Login
-                </Button>
-            </Box>
+           
         </Box>
     );
 }

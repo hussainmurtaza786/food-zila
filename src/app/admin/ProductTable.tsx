@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  useToast, Box, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, Flex, Image, Button,
+   Box, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, Flex, Image, Button,
   useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
@@ -46,7 +46,7 @@ const updateProductSchema = Yup.object().shape({
 });
 
 export default function ProductTable({ products: initialProducts }: { products: Product[] }) {
-  const toast = useToast();
+
   const dispatch = useDispatch<AppDispatch>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [products, setProducts] = useState<Product[]>(initialProducts);

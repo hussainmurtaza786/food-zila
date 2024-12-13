@@ -1,10 +1,12 @@
 import { Box, Button, Grid, Image, Text } from "@chakra-ui/react";
 import { Oswald } from "@next/font/google";
+import { headers } from "next/headers";
 
-export async function ProductList() {
-  const response = await fetch("http://localhost:3000/api/admin/products", {
+async function ProductList() {
+  // headers().forEach((v, k) => console.log({ k, v }))
+  // const response = await fetch(`/api/admin/products`, {
+  const response = await fetch(`${headers().get('x-forwarded-proto')}://${headers().get('host')}/api/admin/products`, {
     cache: "no-cache",
-
   });
   const data = await response.json();
   return data.products;
@@ -22,7 +24,7 @@ const oswald = Oswald({ weight: "400", subsets: ["latin"] });
 
 export default async function Shop() {
   const products = await ProductList();
-  console.log(products);
+  // console.log(products);
   return (
     <Box display="grid" gridTemplateColumns="repeat(3, 1fr)" gap={4} p={4}>
       {products?.map((item: Product) => (

@@ -16,7 +16,7 @@ import {
   Input,
   FormControl,
   FormLabel,
-  FormErrorMessage
+
 } from "@chakra-ui/react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -69,7 +69,7 @@ export default function DashBoard() {  // Add userRole as a prop
 
     try {
       localStorage.setItem("","")
-      const response = await fetch("http://localhost:3000/api/admin/users");
+      const response = await fetch("/api/admin/users");
       if (!response.ok) {
         throw new Error("Failed to fetch users");
       }
@@ -86,6 +86,7 @@ export default function DashBoard() {  // Add userRole as a prop
         duration: 5000,
         isClosable: true,
       });
+      console.error(err)
     } finally {
       setLoading(false);
     }
@@ -95,7 +96,7 @@ export default function DashBoard() {  // Add userRole as a prop
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch("http://localhost:3000/api/admin/products");
+      const response = await fetch("/api/admin/products");
       if (!response.ok) {
         throw new Error("Failed to fetch products");
       }
@@ -111,6 +112,8 @@ export default function DashBoard() {  // Add userRole as a prop
         duration: 5000,
         isClosable: true,
       });
+      console.error(err)
+
     } finally {
       setLoading(false);
     }
@@ -197,7 +200,7 @@ export default function DashBoard() {  // Add userRole as a prop
               <UserTable users={users} />
             ) : (
               <Text textAlign="center" color="gray.500">
-                Click on "Product List" or "User List" to load the table.
+                Click on &quot Product List &quot or &quot User List &quot to load the table.
               </Text>
             )}
           </Box>
@@ -223,7 +226,7 @@ export default function DashBoard() {  // Add userRole as a prop
                     },
                     body: JSON.stringify(values),
                   });
-                  const data = await response.json();
+                  // const data = await response.json();
                   if (!response.ok) {
                     throw new Error("Failed to create account");
                   }
@@ -244,6 +247,7 @@ export default function DashBoard() {  // Add userRole as a prop
                     duration: 5000,
                     isClosable: true,
                   });
+                  console.error(error)
                 } finally {
                   setSubmitting(false);
                 }

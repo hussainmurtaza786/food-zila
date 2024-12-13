@@ -1,15 +1,18 @@
+import handleTokenExpiry from "@/redux/utils/TokenExpiry";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+
 
 type User = {
   id: string;
   name: string;
   email: string;
   phoneNumber: string;
+  role: string
 };
 
-const API_URL = "http://localhost:3000/api/admin/users";
+const API_URL = "/api/admin/users";
 
 // Helper functions to check token
 const getToken = () => {
@@ -22,10 +25,14 @@ const isTokenExpired = (token: string) => {
   try {
     const decoded: any = jwtDecode(token);
     const currentTime = Date.now() / 1000;
-    return currentTime > decoded.exp;
+    if (currentTime > decoded.exp) {
+      return true;
+    } else {
+      return false;
+    }
   } catch (err) {
     console.log(err);
-    return true; // Treating invalid token as expired
+    return true;
   }
 };
 
@@ -42,52 +49,100 @@ const initialState: UserState = {
 };
 
 // Fetch users
-export const fetchUsers = createAsyncThunk<User[]>("users/fetch", async () => {
-  const token = getToken();
-  if (!token) throw new Error("No token found");
-  if (isTokenExpired(token)) throw new Error("Token has expired");
-
-  const response = await axios.get(API_URL, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return response.data.users;
-});
+export const fetchUsers = createAsyncThunk<User[]>(
+  "users/fetch",
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get(API_URL);
+      return response.data.products;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || "Failed to fetch products"
+      );
+    }
+  }
+);
 
 // Add user
-export const addUser = createAsyncThunk<User, Omit<User, "id">>("users/add", async (user) => {
-  const token = getToken();
-  if (!token) throw new Error("No token found");
-  if (isTokenExpired(token)) throw new Error("Token has expired");
+export const addUser = createAsyncThunk<User, Omit<User, "id">>(
+  "users/add",
+  async (user: any, thunkAPI) => {
+    try {
+      const token = getToken();
+      if (!token) throw new Error("No token found");
+      if (isTokenExpired(token)) {
+        handleTokenExpiry("Your session has expired. Please log in again.");
+        return;
+      }
 
-  const response = await axios.post(API_URL, user, {
-    headers: { Authorization: `Bearer ${token}` },
+      const response = await axios.put(API_URL, user, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data.user;
+    } catch (error: any) {
+      console.log(error)
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || "Failed to add product"
+      );
+      
+    }
+
   });
-  return response.data.user;
-});
 
 // Update user
-export const updateUser = createAsyncThunk<User, User>("users/update", async (user) => {
-  const token = getToken();
-  if (!token) throw new Error("No token found");
-  if (isTokenExpired(token)) throw new Error("Token has expired");
+export const updateUser = createAsyncThunk<User, User>(
+  "users/update",
+  async (user: any, thunkAPI) => {
+    try {
+      const token = getToken();
+      if (!token) throw new Error("No token found");
+      if (isTokenExpired(token)) {
+        handleTokenExpiry("Your session has expired. Please log in again.");
+        return;
+      }
+      const response = await axios.patch(API_URL, user, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return response.data.user;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || "Failed to update product"
+      );
+    }
 
-  const response = await axios.patch(API_URL, user, {
-    headers: { Authorization: `Bearer ${token}` },
   });
-  return response.data.user;
-});
 
 // Delete user
-export const deleteUser = createAsyncThunk<{ id: string }, string>("users/delete", async (id) => {
-  const token = getToken();
-  if (!token) throw new Error("No token found");
-  if (isTokenExpired(token)) throw new Error("Token has expired");
+export const deleteUser = createAsyncThunk<{ id: string }, string>(
+  "users/delete",
+  async (id: string, thunkAPI) => {
+    try {
+      const token = getToken();
+      if (!token) {
+        throw new Error("No token found");
+      }
+      if (isTokenExpired(token)) {
+        handleTokenExpiry("Your session has expired. Please log in again.");
+        return thunkAPI.rejectWithValue("Session expired");
+      }
 
-  await axios.delete(API_URL, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return { id };
-});
+      await axios.delete(API_URL, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      return { id };
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(
+        error.response?.data?.message || error.message || "Failed to delete user"
+      );
+    }
+  }
+);
+
+
+
+
+
+
 
 // User slice
 const userSlice = createSlice({

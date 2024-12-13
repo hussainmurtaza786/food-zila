@@ -11,7 +11,7 @@ type Product = {
   description: string;
 };
 
-const API_URL = "http://localhost:3000/api/admin/products";
+const API_URL = "/api/admin/products";
 
 const getToken = () => {
   const token = localStorage.getItem("authToken");

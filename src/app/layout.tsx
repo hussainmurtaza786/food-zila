@@ -33,8 +33,8 @@ export default function RootLayout(props: {
     // console.log("Key ==>", key)
   });
   // console.log("Header==>", Header)
-  const path = headers().get('referer') // returns path like http://localhost:3000/admin
-  const host = headers().get('host') // returns string like localhost:3000
+  const path = headers().get('referer') 
+  const host = headers().get('host') 
 
   const isAdminPage = Boolean(host && path && path?.includes(`${host}/admin`));
   // console.log("is")

@@ -94,7 +94,7 @@ export default function Responsis() {
   return (
     <Box width="100%" maxWidth="1200px" margin="auto" padding={8}>
       <Text fontSize="3xl" fontWeight="bold" textAlign="center" mb={6}>
-        Our Top Rated Clients' Experience
+        Our Top Rated Clients &apos  Experience
       </Text>
       <Slider {...settings}>
         {ratings.map((rating) => (
