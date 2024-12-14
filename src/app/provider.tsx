@@ -14,6 +14,14 @@ const montserrat = Montserrat({ weight: ['400', '700'], subsets: ['latin'] });
 const openSans = Open_Sans({ weight: ['400', '700'], subsets: ['latin'] });
 
 const theme = extendTheme({
+  breakpoints: {
+    xs: "320px",
+    sm: "375px",
+    md: "425px",
+    lg: "768px",
+    xl: "1024px",
+    "2xl": "1440px",
+  },
   fonts: {
     heading: montserrat.style.fontFamily, // Use the loaded font
     body: openSans.style.fontFamily, // Use the loaded font
@@ -40,14 +48,7 @@ const theme = extendTheme({
       },
     },
   },
-  breakpoints: {
-    xs: "320px",
-    sm: "375px",
-    md: "425px",
-    lg: "768px",
-    xl: "1024px",
-    "2xl": "1440px",
-  },
+  
 });
 
 export default function RootLayout(props: { children: React.ReactNode }) {

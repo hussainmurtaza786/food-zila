@@ -2,7 +2,6 @@ import { Box, Image, Text } from "@chakra-ui/react";
 import { Roboto, Oswald } from '@next/font/google';
 import { FaFacebookF, FaLinkedinIn, FaPinterestP, FaTwitter } from "react-icons/fa";
 
-
 const roboto = Roboto({ weight: '400', subsets: ['latin'] });
 const oswald = Oswald({ weight: '700', subsets: ['latin'] });
 
@@ -16,17 +15,10 @@ const socialIcons = [
 export default function Footer() {
     return (
         <Box>
-            <Box bgColor="whitesmoke" display='flex' alignItems='center' justifyContent='space-between
-            '>
+            <Box bgColor="whitesmoke" display='flex' flexDirection={{ base: 'column', md: 'row' }} alignItems='center' justifyContent='space-between' p={{ base: 6, md: 10 }}>
                 {/* First Footer Section */}
-                <Box
-
-                    p={{ base: 6, md: 10 }}
-                    display={{ base: 'block', md: 'flex' }}
-
-                    alignItems='center'
-                >
-                    <Box mb={{ base: 6, md: 0 }}>
+                <Box display={{ base: 'block', md: 'flex' }} alignItems='center'>
+                    <Box mb={{ base: 6, md: 0 }} mr={{ base: 0, md: 4 }}>
                         <Box m={4} mb={{ base: 2, md: 0 }}>
                             <Image alt="foodzilla" src="assets/foodzilla.png" w='100px' />
                         </Box>
@@ -55,9 +47,10 @@ export default function Footer() {
                             ))}
                         </Box>
                     </Box>
+
                 </Box>
 
-                <Box >
+                <Box mt={{ base: 6, md: 0 }} textAlign={{ base: 'center', md: 'left' }}>
                     <Text className={oswald.className} fontWeight='bold' mt='0' gap={10}>Quick Links</Text>
                     <Text mt={4}>Services</Text>
                     <Text mt={4}>About Comapany</Text>
@@ -65,7 +58,8 @@ export default function Footer() {
                     <Text mt={4}>Team Member</Text>
                     <Text mt={4}>testimonials</Text>
                 </Box>
-                <Box>
+
+                <Box mt={{ base: 6, md: 0 }} textAlign={{ base: 'center', md: 'left' }}>
                     <Text className={oswald.className} fontWeight='bold'>My Account</Text>
                     <Text mt={4}>My Profile</Text>
                     <Text mt={4}>My Order History</Text>
@@ -73,16 +67,15 @@ export default function Footer() {
                     <Text mt={4}>Order Tracking</Text>
                     <Text mt={4}>Shopping Cart</Text>
                 </Box>
-                <Box>
-                    <Text className={oswald.className} fontWeight='bold' mt='-27px'>Address</Text>
-                    <Text w='160px' mt={4}>570 8th Ave, New York,NY 10018United States</Text>
-                    <Text fontWeight='bold' className={oswald.className} mt={4}>Hours</Text>
-                    <Text mt={4} w='160px'>9.30am – 6.30pm
-                        Monday to Friday</Text>
 
+                <Box mt={{ base: 6, md: 0 }} textAlign={{ base: 'center', md: 'left' }}>
+                    <Text className={oswald.className} fontWeight='bold' mt='-27px'>Address</Text>
+                    <Text w='160px' mt={4}>570 8th Ave, New York, NY 10018, United States</Text>
+                    <Text fontWeight='bold' className={oswald.className} mt={4}>Hours</Text>
+                    <Text mt={4} w='160px'>9.30am – 6.30pm, Monday to Friday</Text>
                 </Box>
                 {/* App Store and Google Play Images */}
-                <Box m={{ base: 4, md: 6 }} textAlign={{ base: 'center', md: 'left' }}>
+                <Box textAlign={{ base: 'center', md: 'left' }} mt={{ base: 6, md: 0 }}>
                     <Text fontWeight="bolder" m={4} className={oswald.className}>Install App</Text>
                     <Text m={4}>FROM APP STORE OR GOOGLE PLAY</Text>
                     <Box display="flex" gap='6' mt={3} alignItems="center" justifyContent="center">
@@ -99,8 +92,6 @@ export default function Footer() {
                             objectFit="contain"
                         />
                     </Box>
-                    <Text m={4} fontSize={{ base: '12px', md: '15px' }}>24/7 SUPPORT CENTER</Text>
-                    <Text m={4} fontSize={{ base: '15px', md: '20px' }} color='#00813d' fontWeight='bold'>+1718-904-4450</Text>
                 </Box>
             </Box>
 
