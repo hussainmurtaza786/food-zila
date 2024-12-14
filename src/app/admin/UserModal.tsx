@@ -1,16 +1,17 @@
-import React, { useState, } from "react";
-import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalFooter, ModalBody, ModalCloseButton, Button, FormControl, FormLabel, Input, VStack } from "@chakra-ui/react";
-import { User } from "./UserTable";
-import { updateUser } from "@/redux/slices/admin/userSlice";
+
+import { Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input, } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import { Field, Form, Formik } from "formik";
+import { addUser, updateUser, type User } from "@/redux/slices/admin/userSlice";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+
+// Type for a user
+
 
 type UserModalProps = {
     isOpen: boolean;
     onClose: () => void;
-    onSave: (values: User) => void;
     editing: boolean;
     selectedUser: User | null;
 };
@@ -24,21 +25,36 @@ const userSchema = Yup.object().shape({
     password: Yup.string()
         .min(6, "Password must be at least 6 characters")
         .required("Password is Required"),
-    role: Yup.string()
+    role: Yup.string(),
 });
-const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSave, editing, selectedUser, }) => {
 
-    const [users, setUsers] = useState<User[]>();
-
+export default function UserModal({
+    isOpen,
+    onClose,
+    editing,
+    selectedUser,
+}: UserModalProps) {
     const dispatch = useDispatch<AppDispatch>();
+
+    const addData = async (values: Omit<User, "id"> & { password: string }) => {
+        try {
+            const newUser = await dispatch(addUser(values)).unwrap();
+            if (newUser && newUser.id) {
+                onClose(); // Close modal after adding
+            } else {
+                console.error("Failed to add user: Invalid user data", newUser);
+            }
+        } catch (err) {
+            console.error("Failed to add user:", err);
+        }
+    };
+
     const updateData = async (values: User) => {
         try {
             const updatedUser = await dispatch(updateUser(values)).unwrap();
+            console.log("updated", updateUser)
             if (updatedUser) {
-                setUsers(
-                    users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
-                );
-                onClose();
+                onClose(); // Close modal after updating
             } else {
                 console.error("Failed to update user: Invalid updated data", updatedUser);
             }
@@ -59,8 +75,8 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSave, editing,
                             name: selectedUser?.name || "",
                             email: selectedUser?.email || "",
                             phoneNumber: selectedUser?.phoneNumber || "",
-                            password: "", // Add password field in initialValues
-                            role: ""
+                            password: "",
+                            role: selectedUser?.role || "",
                         }}
                         validationSchema={userSchema}
                         onSubmit={(values) => {
@@ -106,7 +122,7 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSave, editing,
                                 />
                                 <Field
                                     name="password"
-                                    type="password" // Make the password field type="password"
+                                    type="password"
                                     as={Input}
                                     placeholder="Password"
                                     value={values.password}
@@ -123,11 +139,8 @@ const UserModal: React.FC<UserModalProps> = ({ isOpen, onClose, onSave, editing,
                             </Form>
                         )}
                     </Formik>
-
                 </ModalBody>
             </ModalContent>
         </Modal>
     );
-};
-
-export default UserModal;
+}

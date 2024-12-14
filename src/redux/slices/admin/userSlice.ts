@@ -4,7 +4,7 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 
 
-type User = {
+export type User = {
   id: string;
   name: string;
   email: string;
@@ -103,6 +103,7 @@ export const updateUser = createAsyncThunk<User, User>(
       const response = await axios.patch(API_URL, user, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      console.log("Response ==>",response)
       return response.data.user;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(
@@ -128,6 +129,7 @@ export const deleteUser = createAsyncThunk<{ id: string }, string>(
 
       await axios.delete(API_URL, {
         headers: { Authorization: `Bearer ${token}` },
+        data:{id}
       });
       return { id };
     } catch (error: any) {
