@@ -6,7 +6,7 @@ const oswald = Oswald({ weight: "400", subsets: ["latin"] });
 
 export default function FoodDeliver() {
     return (
-        <Flex justify="center" align="center" m="2rem" p="10px" overflow="hidden">
+        <Flex justify="center" align="center" m="2rem" py="10px" overflow="hidden">
             <Box position="relative" w="100%" maxW="1200px" h="500px" borderRadius="25px" overflow="hidden">
                 {/* Background Image with overlay */}
                 <Image src="https://img.freepik.com/premium-vector/fast-food-pattern-doodle-hand-drawn-style-white-background_338906-482.jpg" alt="Food Pattern" w="100%" h="100%" />

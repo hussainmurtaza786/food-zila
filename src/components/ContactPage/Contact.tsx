@@ -9,9 +9,28 @@ const patrick_hand = Patrick_Hand({ weight: "400", subsets: ['latin-ext'] });
 export default function Contact() {
   return (
     <Box display='flex' flexDirection='column' bgColor='whitesmoke'>
-      <Box position='relative'>
-        <Image alt="contact-banner" width='100%' h='500px' src="assets/con-banner.jpg" />
-        <Text className={patrick_hand.className} position='absolute' top='9.5rem' right='20rem' color='white' fontSize='80px'>CONTACT US</Text>
+      <Box position="relative" w="100%">
+        <Image
+          alt="contact-banner"
+          w="100%"
+          h={{ base: "220px", sm: "300px", md: "400px", lg: "500px" }}
+          objectFit="cover"
+          src="assets/con-banner.jpg"
+        />
+
+        <Text
+          className={patrick_hand.className}
+          position="absolute"
+          top="50%"
+          left="50%"
+          transform="translate(-50%, -50%)"
+          color="white"
+          fontSize={{ base: "32px", sm: "50px", md: "70px", lg: "80px" }}
+          textAlign="center"
+          whiteSpace="nowrap"
+        >
+          CONTACT US
+        </Text>
       </Box>
       <Box w='100%' display='flex' justifyContent='center' alignItems='center'>
         <Box

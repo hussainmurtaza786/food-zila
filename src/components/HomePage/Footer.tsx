@@ -1,133 +1,206 @@
 import { Box, Image, Text } from "@chakra-ui/react";
-import { Roboto, Oswald } from '@next/font/google';
-import { FaFacebookF, FaLinkedinIn, FaPinterestP, FaTwitter } from "react-icons/fa";
+import { Roboto, Oswald } from "@next/font/google";
+import {
+  FaFacebookF,
+  FaLinkedinIn,
+  FaPinterestP,
+  FaTwitter,
+} from "react-icons/fa";
 
-
-const roboto = Roboto({ weight: '400', subsets: ['latin'] });
-const oswald = Oswald({ weight: '700', subsets: ['latin'] });
+const roboto = Roboto({ weight: "400", subsets: ["latin"] });
+const oswald = Oswald({ weight: "700", subsets: ["latin"] });
 
 const socialIcons = [
-    { icon: <FaFacebookF /> },
-    { icon: <FaTwitter /> },
-    { icon: <FaPinterestP /> },
-    { icon: <FaLinkedinIn /> },
+  { icon: <FaFacebookF /> },
+  { icon: <FaTwitter /> },
+  { icon: <FaPinterestP /> },
+  { icon: <FaLinkedinIn /> },
 ];
 
 export default function Footer() {
-    return (
-        <Box>
-            <Box bgColor="whitesmoke" display='flex' alignItems='center' justifyContent='space-between
-            '>
-                {/* First Footer Section */}
-                <Box
 
-                    p={{ base: 6, md: 10 }}
-                    display={{ base: 'block', md: 'flex' }}
+  const year = new Date().getFullYear()
+  return (
+    <Box>
+      <Box
+        bg="whitesmoke"
+        px={{ base: 6, md: 10, lg: 16 }}
+        py={{ base: 10, md: 12 }}
+        display="flex"
+        flexDirection={{ base: "column", md: "row" }}
+        flexWrap="wrap"
+        justifyContent="space-between"
+        alignItems={{ base: "flex-start", md: "flex-start" }}
+        gap={{ base: 10, md: 8 }}
+      >
+        {/* Logo Section */}
+        <Box flex="1" minW={{ base: "100%", sm: "250px", lg: "280px" }}>
+          <Image
+            alt="foodzilla"
+            src="assets/foodzilla.png"
+            w="100px"
+            mb={4}
+          />
 
-                    alignItems='center'
-                >
-                    <Box mb={{ base: 6, md: 0 }}>
-                        <Box m={4} mb={{ base: 2, md: 0 }}>
-                            <Image alt="foodzilla" src="assets/foodzilla.png" w='100px' />
-                        </Box>
-                        <Box fontSize={{ base: '12px', md: '15px' }} w={{ base: 'auto', md: '250px' }}>
-                            <Text m={4}>We believe it has the power to do amazing things.</Text>
-                            <Text m={4}>Interested in working with us?</Text>
-                            <Text color="#00813d" className={oswald.className} m={4}>info@example.com</Text>
-                        </Box>
-                        <Box display="flex" m={2}>
-                            {socialIcons.map((social, index) => (
-                                <Box
-                                    key={index}
-                                    bgColor="gray.200"
-                                    w="30px"
-                                    h="30px"
-                                    p={2}
-                                    borderRadius="50%"
-                                    _hover={{ bgColor: '#00813d', transition: '2s ease' }}
-                                    display="flex"
-                                    justifyContent="center"
-                                    alignItems="center"
-                                    margin="5px"
-                                >
-                                    <Box>{social.icon}</Box>
-                                </Box>
-                            ))}
-                        </Box>
-                    </Box>
-                </Box>
+          <Text fontSize={{ base: "14px", md: "15px" }} mb={2}>
+            We believe it has the power to do amazing things.
+          </Text>
 
-                <Box >
-                    <Text className={oswald.className} fontWeight='bold' mt='0' gap={10}>Quick Links</Text>
-                    <Text mt={4}>Services</Text>
-                    <Text mt={4}>About Comapany</Text>
-                    <Text mt={4}>Latest News</Text>
-                    <Text mt={4}>Team Member</Text>
-                    <Text mt={4}>testimonials</Text>
-                </Box>
-                <Box>
-                    <Text className={oswald.className} fontWeight='bold'>My Account</Text>
-                    <Text mt={4}>My Profile</Text>
-                    <Text mt={4}>My Order History</Text>
-                    <Text mt={4}>My Wish List</Text>
-                    <Text mt={4}>Order Tracking</Text>
-                    <Text mt={4}>Shopping Cart</Text>
-                </Box>
-                <Box>
-                    <Text className={oswald.className} fontWeight='bold' mt='-27px'>Address</Text>
-                    <Text w='160px' mt={4}>570 8th Ave, New York,NY 10018United States</Text>
-                    <Text fontWeight='bold' className={oswald.className} mt={4}>Hours</Text>
-                    <Text mt={4} w='160px'>9.30am – 6.30pm
-                        Monday to Friday</Text>
+          <Text fontSize={{ base: "14px", md: "15px" }} mb={2}>
+            Interested in working with us?
+          </Text>
 
-                </Box>
-                {/* App Store and Google Play Images */}
-                <Box m={{ base: 4, md: 6 }} textAlign={{ base: 'center', md: 'left' }}>
-                    <Text fontWeight="bolder" m={4} className={oswald.className}>Install App</Text>
-                    <Text m={4}>FROM APP STORE OR GOOGLE PLAY</Text>
-                    <Box display="flex" gap='6' mt={3} alignItems="center" justifyContent="center">
-                        <Image
-                            src="assets/google-play.png"
-                            alt="Google Play"
-                            maxW="150px"
-                            objectFit="contain"
-                        />
-                        <Image
-                            src="assets/app-store.png"
-                            alt="App Store"
-                            maxW="150px"
-                            objectFit="contain"
-                        />
-                    </Box>
-                    <Text m={4} fontSize={{ base: '12px', md: '15px' }}>24/7 SUPPORT CENTER</Text>
-                    <Text m={4} fontSize={{ base: '15px', md: '20px' }} color='#00813d' fontWeight='bold'>+1718-904-4450</Text>
-                </Box>
-            </Box>
+          <Text
+            color="#00813d"
+            className={oswald.className}
+            fontSize={{ base: "15px", md: "16px" }}
+            mb={5}
+          >
+            info@foodzilla.com
+          </Text>
 
-            {/* Second Footer Section */}
-            <Box
-                bgColor="#00813d"
-                color="white"
-                p={{ base: 6, md: 10 }}
+          <Box display="flex" flexWrap="wrap">
+            {socialIcons.map((social, index) => (
+              <Box
+                key={index}
+                bg="gray.200"
+                w="38px"
+                h="38px"
+                borderRadius="full"
                 display="flex"
-                justifyContent="space-between"
-                flexDirection={{ base: 'column', md: 'row' }}
+                justifyContent="center"
                 alignItems="center"
-            >
-                <Box textAlign={{ base: 'center', md: 'left' }}>
-                    <Text className={roboto.className} fontSize={{ base: '12px', md: '15px' }}>
-                        © Copyright 2024 FoodZila. All Rights Reserved.
-                    </Text>
-                </Box>
-                <Box mt={{ base: 4, md: 0 }}>
-                    <Image
-                        src="assets/card.png"
-                        alt="Payment Methods"
-                        style={{ transform: 'rotate(180deg)' }}
-                        maxW={{ base: '80%', md: 'none' }}
-                    />
-                </Box>
-            </Box>
+                mr={3}
+                mb={2}
+                cursor="pointer"
+                transition="0.3s"
+                _hover={{
+                  bg: "#00813d",
+                  color: "white",
+                }}
+              >
+                {social.icon}
+              </Box>
+            ))}
+          </Box>
         </Box>
-    );
+
+        {/* Quick Links */}
+        <Box flex="1" minW={{ base: "45%", md: "170px" }}>
+          <Text className={oswald.className} fontWeight="bold" mb={5}>
+            Quick Links
+          </Text>
+
+          <Text mb={3}>Services</Text>
+          <Text mb={3}>About Company</Text>
+          <Text mb={3}>Latest News</Text>
+          <Text mb={3}>Team Member</Text>
+          <Text>Testimonials</Text>
+        </Box>
+
+        {/* My Account */}
+        <Box flex="1" minW={{ base: "45%", md: "170px" }}>
+          <Text className={oswald.className} fontWeight="bold" mb={5}>
+            My Account
+          </Text>
+
+          <Text mb={3}>My Profile</Text>
+          <Text mb={3}>My Order History</Text>
+          <Text mb={3}>My Wish List</Text>
+          <Text mb={3}>Order Tracking</Text>
+          <Text>Shopping Cart</Text>
+        </Box>
+
+        {/* Address */}
+        <Box flex="1" minW={{ base: "100%", sm: "220px", md: "180px" }}>
+          <Text className={oswald.className} fontWeight="bold" mb={5}>
+            Address
+          </Text>
+
+          <Text maxW="180px" mb={5}>
+            570 8th Ave, New York, NY 10018 United States
+          </Text>
+
+          <Text className={oswald.className} fontWeight="bold" mb={3}>
+            Hours
+          </Text>
+
+          <Text maxW="180px">
+            9:30am – 6:30pm
+            <br />
+            Monday to Friday
+          </Text>
+        </Box>
+
+        {/* Install App */}
+        <Box flex="1" minW={{ base: "100%", md: "250px" }}>
+          <Text className={oswald.className} fontWeight="bold" mb={4}>
+            Install App
+          </Text>
+
+          <Text mb={5}>FROM APP STORE OR GOOGLE PLAY</Text>
+
+          <Box
+            display="flex"
+            flexDirection={{ base: "column", sm: "row" }}
+            gap={4}
+            alignItems={{ base: "flex-start", sm: "center" }}
+            mb={5}
+          >
+            <Image
+              src="assets/google-play.png"
+              alt="Google Play"
+              maxW="150px"
+            />
+
+            <Image
+              src="assets/app-store.png"
+              alt="App Store"
+              maxW="150px"
+            />
+          </Box>
+
+          <Text fontSize={{ base: "14px", md: "15px" }} mb={2}>
+            24/7 SUPPORT CENTER
+          </Text>
+
+          <Text
+            fontSize={{ base: "18px", md: "22px" }}
+            color="#00813d"
+            fontWeight="bold"
+          >
+            +1617-804-2210
+          </Text>
+        </Box>
+      </Box>
+
+      {/* Bottom Footer */}
+      <Box
+        bg="#00813d"
+        color="white"
+        px={{ base: 6, md: 10, lg: 16 }}
+        py={6}
+        display="flex"
+        flexDirection={{ base: "column", md: "row" }}
+        justifyContent="space-between"
+        alignItems="center"
+        gap={4}
+      >
+        <Text
+          className={roboto.className}
+          textAlign={{ base: "center", md: "left" }}
+          fontSize={{ base: "13px", md: "15px" }}
+        >
+          © Copyright {year}  FoodZila. All Rights Reserved.
+        </Text>
+
+        <Image
+          src="assets/card.png"
+          alt="Payment Methods"
+          transform="rotate(180deg)"
+          maxW={{ base: "220px", md: "280px" }}
+        />
+      </Box>
+    </Box>
+  );
 }

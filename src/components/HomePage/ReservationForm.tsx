@@ -1,128 +1,150 @@
 import { Box, Button, Image, Input, Text } from "@chakra-ui/react";
 import { FaPhoneAlt } from "react-icons/fa";
-import { Oswald } from '@next/font/google';
+import { Oswald } from "@next/font/google";
 
-const oswald = Oswald({ weight: '400', subsets: ['latin'] });
+const oswald = Oswald({ weight: "400", subsets: ["latin"] });
 
 export default function ReservationForm() {
-    return (
-        <Box>
-            <Box position="relative" width="100%" h={{ base: 'auto', md: '600px' }} color='white' >
-                <Box w="100%" h="100%">
-                    <Image alt='bg-img' w="100%" h="100%" src="assets/bg-black.jpeg" objectFit="cover" />
-                </Box>
+  return (
+    <Box>
+      <Box
+        position="relative"
+        w="100%"
+        minH={{ base: "950px", md: "600px" }}
+        color="white"
+      >
+        <Image
+          alt="bg-img"
+          src="assets/bg-black.jpeg"
+          w="100%"
+          h="100%"
+          objectFit="cover"
+          position="absolute"
+          top="0"
+          left="0"
+        />
 
-                {/* Title Text */}
-                <Box
-                    className={oswald.className}
-                    position="absolute"
-                    top={{ base: '3rem', md: '6rem' }}
-                    left={{ base: '2rem', md: '4rem' }}
-                    color='white'
-                    fontSize={{ base: '24px', md: '60px' }}
-                    fontWeight="bold"
-                    maxWidth="90%"
-                >
-                    <Text>
-                        NEED BOOKING?
-                    </Text>
-                    <Text>
-                        RESERVE YOUR TABLE?
-                    </Text>
-                </Box>
+        {/* Left Content */}
+        <Box
+          position="absolute"
+          left={{ base: 6, md: 10 }}
+          top={{ base: 8, md: 20 }}
+          maxW={{ base: "90%", lg: "45%" }}
+          zIndex={2}
+        >
+          <Text
+            className={oswald.className}
+            fontSize={{ base: "30px", sm: "38px", md: "52px", lg: "60px" }}
+            fontWeight="bold"
+            lineHeight="1.2"
+          >
+            NEED BOOKING?
+          </Text>
 
-                {/* Phone Section */}
-                <Box
-                    display={{ base: 'block', md: 'flex' }}
-                    position="absolute"
-                    bottom={{ base: '5rem', md: '10rem' }}
-                    left={{ base: '2rem', md: '4rem' }}
-                    alignItems="center"
-                    w="auto"
-                >
-                    <Box display="flex" mt='6px' justifyContent='center' alignItems='center' bgColor='#00813d' w='60px' h='60px' borderRadius='50%'>
-                        <FaPhoneAlt size='40px' />
-                    </Box>
-                    <Box display="flex" flexDirection='column' m={2} fontSize={{ base: '14px', md: '20px' }} textAlign={{ base: 'center', md: 'left' }}>
-                        <Text>
-                            24/7 Support center
-                        </Text>
-                        <Text>
-                            +1718-904-4450
-                        </Text>
-                    </Box>
-                </Box>
+          <Text
+            className={oswald.className}
+            fontSize={{ base: "30px", sm: "38px", md: "52px", lg: "60px" }}
+            fontWeight="bold"
+            lineHeight="1.2"
+          >
+            RESERVE YOUR TABLE?
+          </Text>
 
-                {/* Reservation Form */}
-                <Box
-                    position="absolute"
-                    right={{ base: '2rem', md: '5rem' }}
-                    color="white"
-                    top={{ base: '10rem', md: '5rem' }}
-                    borderRadius="25px"
-                    bgColor="#00813d"
-                    p={{ base: 4, md: 10 }}
-                    w={{ base: '100%', md: 'auto' }}
-                    maxW="450px"
-                    zIndex={2}
-                >
-                    <Text fontSize={{ base: '18px', md: '22px' }} p={4} textAlign="center">
-                        CREATE A RESERVATION
-                    </Text>
-                    <form>
-                        <Box p={3}>
-                            <Input
-                                w="100%"
-                                h="50px"
-                                type="number"
-                                placeholder="Number of people"
-                                sx={{
-                                    "::-webkit-input-placeholder": { color: "white" },
-                                    "::-moz-placeholder": { color: "white" },
-                                    ":-ms-input-placeholder": { color: "white" },
-                                }}
-                            />
-                        </Box>
-
-                        <Box p={3} display="flex" position="relative">
-                            <Input
-                                w="100%"
-                                h="50px"
-                                type="tel"
-                                placeholder="Phone Number"
-                                sx={{
-                                    "::-webkit-input-placeholder": { color: "white" },
-                                    "::-moz-placeholder": { color: "white" },
-                                    ":-ms-input-placeholder": { color: "white" },
-                                }}
-                            />
-                            <Box position="absolute" right="1.5rem" top="2rem">
-                                <FaPhoneAlt />
-                            </Box>
-                        </Box>
-
-                        <Box p={3}>
-                            <Input
-                                w="100%"
-                                h="50px"
-                                color="white"
-                                type="date"
-                                sx={{
-                                    "::-webkit-input-placeholder": { color: "white" },
-                                    "::-moz-placeholder": { color: "white" },
-                                    ":-ms-input-placeholder": { color: "white" },
-                                }}
-                            />
-                        </Box>
-
-                        <Box w="100%" p={3}>
-                            <Button w="100%" fontSize={{ base: '16px', md: '18px' }}>
-                                BOOK NOW
-                            </Button>
-                        </Box>
-                    </form>
-                </Box>
+          <Box
+            display="flex"
+            alignItems="center"
+            mt={{ base: 10, md: 20 }}
+            flexDirection={{ base: "column", sm: "row" }}
+            textAlign={{ base: "center", sm: "left" }}
+          >
+            <Box
+              bg="#00813d"
+              w="60px"
+              h="60px"
+              borderRadius="full"
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <FaPhoneAlt size={28} />
             </Box>
+
+            <Box ml={{ base: 0, sm: 4 }} mt={{ base: 4, sm: 0 }}>
+              <Text fontSize={{ base: "16px", md: "18px" }}>
+                24/7 Support Center
+              </Text>
+              <Text
+                fontSize={{ base: "18px", md: "22px" }}
+                fontWeight="bold"
+              >
+                +1617-804-2210
+              </Text>
+            </Box>
+          </Box>
         </Box>
-    );
+
+        {/* Reservation Form */}
+        <Box
+          position={{ base: "relative", md: "absolute" }}
+          top={{ base: "430px", md: "80px" }}            
+          right={{ md: "60px" }}
+          mx={{ base: 6, md: 0 }}
+          bg="#00813d"
+          borderRadius="25px"
+          p={{ base: 6, md: 10 }}
+        //   w={{ base: "calc(100% - 48px)", sm: "420px", md: "430px" }}
+          zIndex={2}
+        >
+          <Text
+            className={oswald.className}
+            textAlign="center"
+            fontSize={{ base: "22px", md: "26px" }}
+            mb={6}
+          >
+            CREATE A RESERVATION
+          </Text>
+
+          <form>
+            <Box mb={5}>
+              <Input
+                h="52px"
+                type="number"
+                placeholder="Number of people"
+                color="white"
+                _placeholder={{ color: "white" }}
+              />
+            </Box>
+
+            <Box position="relative" mb={5}>
+              <Input
+                h="52px"
+                type="tel"
+                placeholder="Phone Number"
+                color="white"
+                pr="50px"
+                _placeholder={{ color: "white" }}
+              />
+
+              <Box
+                position="absolute"
+                right="18px"
+                top="50%"
+                transform="translateY(-50%)"
+              >
+                <FaPhoneAlt />
+              </Box>
+            </Box>
+
+            <Box mb={6}>
+              <Input h="52px" type="date" color="white" />
+            </Box>
+
+            <Button w="100%" h="52px" fontSize="16px">
+              BOOK NOW
+            </Button>
+          </form>
+        </Box>
+      </Box>
+    </Box>
+  );
 }
