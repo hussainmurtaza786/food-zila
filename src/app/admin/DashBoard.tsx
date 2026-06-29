@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   Box,
@@ -16,17 +18,16 @@ import {
   Input,
   FormControl,
   FormLabel,
-  FormErrorMessage
 } from "@chakra-ui/react";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import ProductTable from "./ProductTable";
-import UserTable from "./UserTable"; // Assuming you have a UserTable component
-import { Oswald, Patrick_Hand, Merriweather } from '@next/font/google';
+import UserTable from "./UserTable";
+import { Oswald, Patrick_Hand, Merriweather } from "@next/font/google";
 
 const oswald = Oswald({ weight: "700", subsets: ["latin-ext"] });
-const patrick_hand = Patrick_Hand({ weight: "400", subsets: ['latin-ext'] });
-const merriweather = Merriweather({ weight: "700", subsets: ['latin'] });
+const patrick_hand = Patrick_Hand({ weight: "400", subsets: ["latin-ext"] });
+const merriweather = Merriweather({ weight: "700", subsets: ["latin"] });
 
 type Product = {
   id: string;
@@ -41,49 +42,49 @@ export type User = {
   name: string;
   email: string;
   phoneNumber: string;
-  role:string
+  role: string;
 };
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Username is required"),
-  phoneNumber: Yup.string().required('Phone number is required').matches(/^\d+$/, 'Phone number must be numeric'),
+  phoneNumber: Yup.string()
+    .required("Phone number is required")
+    .matches(/^\d+$/, "Phone number must be numeric"),
   email: Yup.string().email("Invalid email format").required("Email is required"),
-  password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+  password: Yup.string().min(6).required("Password is required"),
 });
 
-export default function DashBoard() {  // Add userRole as a prop
+export default function DashBoard() {
   const [products, setProducts] = useState<Product[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [showProductTable, setShowProductTable] = useState(false);
   const [showUserTable, setShowUserTable] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false); // To toggle the modal visibility
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const toast = useToast();
 
   const fetchUsers = async () => {
     setLoading(true);
     setError(null);
-    setShowProductTable(false)
-    setShowUserTable(false)
+    setShowProductTable(false);
+    setShowUserTable(false);
 
     try {
-      localStorage.setItem("","")
       const response = await fetch("http://localhost:3000/api/admin/users");
-      if (!response.ok) {
-        throw new Error("Failed to fetch users");
-      }
+      if (!response.ok) throw new Error("Failed to fetch users");
+
       const data = await response.json();
-      console.log("data ==>",data)
       setUsers(data.data);
       setShowUserTable(true);
-    } catch (err) {
-      setError("Failed to load users. Please try again.");
+    } catch {
+      setError("Failed to load users.");
       toast({
         title: "Error",
         description: "Failed to load users.",
         status: "error",
-        duration: 5000,
+        duration: 4000,
         isClosable: true,
       });
     } finally {
@@ -94,21 +95,23 @@ export default function DashBoard() {  // Add userRole as a prop
   const fetchProducts = async () => {
     setLoading(true);
     setError(null);
+    setShowProductTable(false);
+    setShowUserTable(false);
+
     try {
       const response = await fetch("http://localhost:3000/api/admin/products");
-      if (!response.ok) {
-        throw new Error("Failed to fetch products");
-      }
+      if (!response.ok) throw new Error("Failed to fetch products");
+
       const data = await response.json();
       setProducts(data.products);
       setShowProductTable(true);
-    } catch (err) {
-      setError("Failed to load products. Please try again.");
+    } catch {
+      setError("Failed to load products.");
       toast({
         title: "Error",
         description: "Failed to load products.",
         status: "error",
-        duration: 5000,
+        duration: 4000,
         isClosable: true,
       });
     } finally {
@@ -116,133 +119,152 @@ export default function DashBoard() {  // Add userRole as a prop
     }
   };
 
-  const handleModalClose = () => {
-    setIsModalOpen(false);
-  };
-
   return (
-    <Box>
-      <Flex direction={["column", "row"]} h="100vh">
+    <Box minH="100vh" bg="gray.50">
+      <Flex
+        direction={{ base: "column", md: "row" }}
+        minH="100vh"
+      >
         {/* Sidebar */}
         <Box
-          bg="linear-gradient(135deg, #D1E8E2, #AEEEEE, #F5F5F5)"
-          flex="1"
-          p={8}
-          boxShadow="xl"
+          w={{ base: "100%", md: "280px" }}
+          bg="linear-gradient(135deg,#D1E8E2,#AEEEEE,#F5F5F5)"
+          p={{ base: 5, md: 8 }}
         >
-          <Text className={patrick_hand.className} fontSize="5xl" mb={6} color="teal.600">
+          <Text
+            className={patrick_hand.className}
+            fontSize={{ base: "3xl", md: "5xl" }}
+            mb={6}
+            color="teal.600"
+            textAlign={{ base: "center", md: "left" }}
+          >
             Dashboard
           </Text>
 
-          <Text
-            fontSize="2xl"
-            fontWeight="bold"
-            mb={4}
-            cursor="pointer"
-            onClick={fetchProducts}
-            className={oswald.className}
+          <Box
+            display="flex"
+            flexDirection={{ base: "row", md: "column" }}
+            gap={{ base: 4, md: 3 }}
+            flexWrap="wrap"
+            justifyContent={{ base: "center", md: "flex-start" }}
           >
-            Product List
-          </Text>
-          <Text
-            fontSize="2xl"
-            fontWeight="bold"
-            mb={4}
-            cursor="pointer"
-            onClick={fetchUsers}
-            className={oswald.className}
-          >
-            User List
-          </Text>
-
-          {/* "Create Account" Section - Render only if the user is an admin */}
-          {/* {userRole === "admin" && ( */}
-            <Box>
-              <Text className={merriweather.className} fontSize="xl" fontWeight="bold" mb={4}>
-                Make Account For Subordinate
-              </Text>
-              <Button colorScheme="teal" onClick={() => setIsModalOpen(true)}>Create Account</Button>
-            </Box>
-          {/* // )} */}
-        </Box>
-
-        {/* Main Content */}
-        <Flex direction="column" flex="4">
-          {/* Welcome Box */}
-          <Box bgColor="blue.500" boxShadow="xl" p="5">
             <Text
-              fontSize="5xl"
-              color="white"
+              fontSize="xl"
               fontWeight="bold"
-              textAlign="center"
-              className={patrick_hand.className}
+              cursor="pointer"
+              onClick={fetchProducts}
+              className={oswald.className}
             >
-              Welcome to the Dashboard
+              Product List
+            </Text>
+
+            <Text
+              fontSize="xl"
+              fontWeight="bold"
+              cursor="pointer"
+              onClick={fetchUsers}
+              className={oswald.className}
+            >
+              User List
             </Text>
           </Box>
 
-          {/* Table or Spinner */}
-          <Box flex="1" p={8}>
+          {/* Create Account */}
+          <Box mt={8} textAlign={{ base: "center", md: "left" }}>
+            <Text
+              className={merriweather.className}
+              fontSize="lg"
+              fontWeight="bold"
+              mb={3}
+            >
+              Make Account
+            </Text>
+
+            <Button w={{ base: "100%", md: "auto" }} colorScheme="teal" onClick={() => setIsModalOpen(true)}>
+              Create Account
+            </Button>
+          </Box>
+        </Box>
+
+        {/* Main */}
+        <Flex direction="column" flex="1">
+          {/* Header */}
+          <Box bg="blue.500" p={6}>
+            <Text
+              fontSize={{ base: "2xl", md: "5xl" }}
+              color="white"
+              textAlign="center"
+              className={patrick_hand.className}
+            >
+              Welcome to Dashboard
+            </Text>
+          </Box>
+
+          {/* Content */}
+          <Box p={{ base: 4, md: 8 }} flex="1">
             {loading ? (
-              <Flex justify="center" align="center" h="100%">
-                <Spinner color="teal.500" size="xl" />
+              <Flex justify="center" align="center" h="300px">
+                <Spinner size="xl" color="teal.500" />
               </Flex>
             ) : error ? (
               <Text textAlign="center" color="red.500">
                 {error}
               </Text>
             ) : showProductTable ? (
-              <ProductTable products={products} />
+              <Box overflowX="auto">
+                <ProductTable products={products} />
+              </Box>
             ) : showUserTable ? (
-              <UserTable users={users} />
+              <Box overflowX="auto">
+                <UserTable users={users} />
+              </Box>
             ) : (
               <Text textAlign="center" color="gray.500">
-                Click on "Product List" or "User List" to load the table.
+                Select Product or User List
               </Text>
             )}
           </Box>
         </Flex>
       </Flex>
 
-      {/* Modal for Creating Account */}
-      <Modal isOpen={isModalOpen} onClose={handleModalClose}>
+      {/* Modal */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} size={{ base: "sm", md: "md" }}>
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Create Subordinate Account</ModalHeader>
+        <ModalContent mx={4}>
+          <ModalHeader>Create Account</ModalHeader>
           <ModalCloseButton />
+
           <ModalBody>
             <Formik
-              initialValues={{ name: "", phoneNumber: "", email: "", password: "" }}
+              initialValues={{
+                name: "",
+                phoneNumber: "",
+                email: "",
+                password: "",
+              }}
               validationSchema={validationSchema}
               onSubmit={async (values, { setSubmitting }) => {
                 try {
-                  const response = await fetch("/api/admin/users", {
+                  await fetch("/api/admin/users", {
                     method: "PUT",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
+                    headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(values),
                   });
-                  const data = await response.json();
-                  if (!response.ok) {
-                    throw new Error("Failed to create account");
-                  }
 
-                  handleModalClose();
                   toast({
-                    title: "Account Created",
-                    description: "Subordinate account has been created.",
+                    title: "Success",
+                    description: "Account created",
                     status: "success",
-                    duration: 5000,
+                    duration: 4000,
                     isClosable: true,
-                  })
-                } catch (error) {
+                  });
+
+                  setIsModalOpen(false);
+                } catch {
                   toast({
                     title: "Error",
-                    description: "There was an issue creating the account.",
+                    description: "Failed to create account",
                     status: "error",
-                    duration: 5000,
-                    isClosable: true,
                   });
                 } finally {
                   setSubmitting(false);
@@ -251,33 +273,35 @@ export default function DashBoard() {  // Add userRole as a prop
             >
               {({ isSubmitting }) => (
                 <Form>
-                  <FormControl isRequired>
-                    <FormLabel htmlFor="name">Name</FormLabel>
-                    <Field as={Input} id="name" name="name" />
-                    <ErrorMessage name="name" component="div" />
+                  <FormControl mb={3}>
+                    <FormLabel>Name</FormLabel>
+                    <Field as={Input} name="name" />
                   </FormControl>
 
-                  <FormControl isRequired>
-                    <FormLabel htmlFor="phoneNumber">Phone Number</FormLabel>
-                    <Field as={Input} id="phoneNumber" name="phoneNumber" />
-                    <ErrorMessage name="phoneNumber" component="div" />
+                  <FormControl mb={3}>
+                    <FormLabel>Phone</FormLabel>
+                    <Field as={Input} name="phoneNumber" />
                   </FormControl>
 
-                  <FormControl isRequired mt={4}>
-                    <FormLabel htmlFor="email">Email</FormLabel>
-                    <Field as={Input} id="email" name="email" type="email" />
-                    <ErrorMessage name="email" component="div" />
+                  <FormControl mb={3}>
+                    <FormLabel>Email</FormLabel>
+                    <Field as={Input} name="email" />
                   </FormControl>
 
-                  <FormControl isRequired mt={4}>
-                    <FormLabel htmlFor="password">Password</FormLabel>
-                    <Field as={Input} id="password" name="password" type="password" />
-                    <ErrorMessage name="password" component="div" />
+                  <FormControl mb={3}>
+                    <FormLabel>Password</FormLabel>
+                    <Field as={Input} type="password" name="password" />
                   </FormControl>
 
-                  <ModalFooter>
-                    <Button type="submit" colorScheme="teal" isLoading={isSubmitting}>Create Account</Button>
-                  </ModalFooter>
+                  <Button
+                    mt={4}
+                    w="100%"
+                    colorScheme="teal"
+                    isLoading={isSubmitting}
+                    type="submit"
+                  >
+                    Create
+                  </Button>
                 </Form>
               )}
             </Formik>
