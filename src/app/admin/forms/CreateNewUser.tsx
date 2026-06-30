@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   Button,
   Modal,
@@ -56,8 +55,6 @@ const CreateNewUser: React.FC<CreateNewUserProps> = ({ isOpen, onClose }) => {
                   },
                   body: JSON.stringify(values),
                 });
-                const data = await response.json();
-
                 if (!response.ok) {
                   throw new Error("Failed to create account");
                 }
@@ -70,7 +67,11 @@ const CreateNewUser: React.FC<CreateNewUserProps> = ({ isOpen, onClose }) => {
                   duration: 5000,
                   isClosable: true,
                 });
-              } catch (error) {
+              } catch (err: unknown) {
+                const message =
+                  err instanceof Error ? err.message : "Unknown error";
+
+                console.error("Login Error:", message);
                 toast({
                   title: "Error",
                   description: "There was an issue creating the account.",

@@ -75,7 +75,7 @@ export default function About() {
             mt={4}
             textAlign={{ base: "center", md: "left" }}
           >
-            It's the perfect dining experience where every dish is crafted with
+            It&apo;s s the perfect dining experience where every dish is crafted with
             fresh, high-quality ingredients. Experience quick and efficient
             service that ensures your food is served fresh.
           </Text>
@@ -122,7 +122,7 @@ export default function About() {
               textAlign="center"
               fontSize={{ base: "14px", md: "16px" }}
             >
-              CUSTOMER'S SATISFACTION IS OUR HIGHEST PRIORITY
+              CUSTOMER&apos;S SATISFACTION IS OUR HIGHEST PRIORITY
             </Text>
           </Box>
         </Box>

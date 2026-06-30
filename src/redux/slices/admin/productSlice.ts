@@ -1,14 +1,5 @@
+import { NewProduct, Product } from "@/types/user";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-
-
-type Product = {
-  id: string;
-  title: string;
-  price: number;
-  imgUrl: string;
-  description: string;
-
-};
 
 
 const API_URL = "http://localhost:3000/api/admin/products";
@@ -38,7 +29,7 @@ export const fetchProducts = createAsyncThunk<Product[]>(
 );
 
 
-export const addProduct = createAsyncThunk<Product, Product>(
+export const addProduct = createAsyncThunk<Product, NewProduct>(
   "products/add",
   async (product) => {
     console.log("product", product)

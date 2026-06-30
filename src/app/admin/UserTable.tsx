@@ -26,15 +26,8 @@ import { AppDispatch } from "@/redux/store";
 import { addUser, updateUser, deleteUser } from "@/redux/slices/admin/userSlice";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
+import { User, UserFormValues } from "@/types/user";
 
-// Type for a user
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  role: String
-};
 
 const userSchema = Yup.object().shape({
   name: Yup.string().required("Name is Required"),
@@ -76,7 +69,7 @@ export default function UserTable({ users: initialUsers }: { users: User[] }) {
     onOpen();
   };
 
-  const addData = async (values: any) => {
+  const addData = async (values: UserFormValues) => {
     try {
       const newUser = await dispatch(addUser(values)).unwrap();
       if (newUser && newUser.id) {

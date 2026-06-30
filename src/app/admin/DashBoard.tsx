@@ -14,16 +14,16 @@ import {
   ModalHeader,
   ModalCloseButton,
   ModalBody,
-  ModalFooter,
   Input,
   FormControl,
   FormLabel,
 } from "@chakra-ui/react";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form } from "formik";
 import * as Yup from "yup";
 import ProductTable from "./ProductTable";
 import UserTable from "./UserTable";
 import { Oswald, Patrick_Hand, Merriweather } from "@next/font/google";
+import { User } from "@/types/user";
 
 const oswald = Oswald({ weight: "700", subsets: ["latin-ext"] });
 const patrick_hand = Patrick_Hand({ weight: "400", subsets: ["latin-ext"] });
@@ -35,14 +35,6 @@ type Product = {
   price: number;
   imgUrl: string;
   description: string;
-};
-
-export type User = {
-  id: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-  role: string;
 };
 
 const validationSchema = Yup.object({

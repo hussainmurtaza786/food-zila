@@ -9,15 +9,7 @@ import { Oswald, Nunito } from "@next/font/google";
 import { deleteProduct, updateProduct, addProduct } from "@/redux/slices/admin/productSlice";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
-
-// Type for a product
-type Product = {
-  id: string;
-  title: string;
-  price: number;
-  imgUrl: string;
-  description: string;
-};
+import { NewProduct, Product } from "@/types/user";
 
 const oswald = Oswald({ weight: "700", subsets: ["latin-ext"] });
 const nunito = Nunito({ weight: "400", subsets: ["latin-ext"] });
@@ -72,7 +64,7 @@ export default function ProductTable({ products: initialProducts }: { products: 
     onOpen();
   };
 
-  const addData = async (values: any) => {
+  const addData = async (values: NewProduct) => {
     try {
       const newProduct = await dispatch(addProduct(values)).unwrap();
       setProducts([...products, newProduct]); // Add new product locally

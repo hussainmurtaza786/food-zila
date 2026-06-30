@@ -54,8 +54,11 @@ export default function AdminPage() {
       document.cookie = `authToken=${data.token}; path=/; max-age=86400`; // 1 day expiry
 
       setIsAuthenticated(true);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+       const message =
+    err instanceof Error ? err.message : "Unknown error";
+
+      setError(message);
     } finally {
       setIsLoading(false);
     }

@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken';
 const SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key';
 
-export async function GET(params: NextRequest) {
+export async function GET() {
     return Response.json(
         { user: { name: 'hussain', age: 16, isMarried: false } },
         // { status: 200 }
@@ -54,8 +54,11 @@ export async function POST(req: NextRequest) {
             { status: 200 }
 
         )
-    } catch (err: any) {
-        console.error("Login Error:", err.message);
+    } catch (err: unknown) {
+        const message =
+            err instanceof Error ? err.message : "Unknown error";
+
+        console.error("Login Error:", message);
         return NextResponse.json(
             { error: "An error occurred during login." },
             { status: 500 }

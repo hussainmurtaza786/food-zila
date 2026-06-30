@@ -8,7 +8,6 @@ import {
   IconButton,
   useBreakpointValue,
   Collapse,
-  VStack,
   Flex,
 } from "@chakra-ui/react";
 import { useState } from "react";

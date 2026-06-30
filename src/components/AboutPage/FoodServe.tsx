@@ -55,7 +55,7 @@ export default function FoodServe() {
           </Text>
 
           <Text fontSize="14px">
-            It's the perfect dining experience where Experience quick and
+            It&apos;s the perfect dining experience where Experience quick and
             efficient
           </Text>
         </Flex>
@@ -84,7 +84,7 @@ export default function FoodServe() {
           </Text>
 
           <Text fontSize="14px">
-            It's the perfect dining experience where Experience quick and
+            It&apos;s the perfect dining experience where Experience quick and
             efficient
           </Text>
         </Flex>
@@ -114,7 +114,7 @@ export default function FoodServe() {
           </Text>
 
           <Text fontSize="14px">
-            It's the perfect dining experience where Experience quick and
+            It&apos;s the perfect dining experience where Experience quick and
             efficient
           </Text>
         </Flex>
