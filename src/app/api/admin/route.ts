@@ -1,8 +1,3 @@
-
 export const GET = async () => {
-
-    return Response.json(
-        { user: { name: 'hussain', age: 16, isMarried: false } },
-        // { status: 200 }
-    )
-}
+  return Response.json({ message: "Admin API" });
+};

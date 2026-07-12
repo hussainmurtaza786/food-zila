@@ -1,88 +1,65 @@
 import { prisma } from "@/prisma/client";
-import { Prisma } from "@prisma/client";
-
 import { NextRequest } from "next/server";
-
+import { getErrorMessage } from "@/lib/api-helpers";
 
 export const GET = async () => {
-    const products = await prisma.product.findMany({})
-    return Response.json(
-        { products: products }
-    )
-}
+  const products = await prisma.product.findMany({
+    include: { category: true },
+    orderBy: { createdAt: "desc" },
+  });
+  return Response.json({ products });
+};
 
 export const PUT = async (req: NextRequest) => {
-    const { id, slug, price, title, createdBy, imgUrl, description }: Prisma.ProductCreateInput = await req.json()
-    try {
-        const product = await prisma.product.create({
-            data: { id, slug, price, title, createdBy, imgUrl, description },
-            select: { id: true, slug: true, price: true, title: true, description: true, imgUrl: true }
-        })
-        return Response.json(
-            { product: product }
-        )
-    } catch (err: unknown) {
-         const message =
-    err instanceof Error ? err.message : "Unknown error";
-
-        return Response.json(
-            { pro: message },
-            { status: 400 }
-        )
-    }
-}
-export const PATCH = async (req: NextRequest) => {
-    const { id, title, price, imgUrl, description, slug }: Prisma.ProductCreateInput = await req.json();
-
-    try {
-        if (!id) {
-            return Response.json({ error: "Product ID is required" }, { status: 400 });
-        }
-
-        const updatedProduct = await prisma.product.update({
-            where: { id },
-            data: { title, price, imgUrl, description, slug },
-        });
-
-        return Response.json({ product: updatedProduct }, { status: 200 });
-    } catch (err: unknown) {
-         const message =
-    err instanceof Error ? err.message : "Unknown error";
-
-        return Response.json({ error: message }, { status: 400 });
-    }
+  try {
+    const { slug, price, title, imgUrl, description, categoryId } = await req.json();
+    const product = await prisma.product.create({
+      data: {
+        slug,
+        price: Number(price),
+        title,
+        imgUrl: imgUrl || null,
+        description: description || null,
+        categoryId: categoryId || null,
+      },
+      include: { category: true },
+    });
+    return Response.json({ product });
+  } catch (err: unknown) {
+    return Response.json({ error: getErrorMessage(err) }, { status: 400 });
+  }
 };
 
+export const PATCH = async (req: NextRequest) => {
+  try {
+    const { id, title, price, imgUrl, description, slug, categoryId } = await req.json();
+    if (!id) return Response.json({ error: "Product ID is required" }, { status: 400 });
+
+    const updated = await prisma.product.update({
+      where: { id },
+      data: {
+        title,
+        price: Number(price),
+        imgUrl,
+        description,
+        slug,
+        categoryId: categoryId || null,
+      },
+      include: { category: true },
+    });
+    return Response.json({ product: updated });
+  } catch (err: unknown) {
+    return Response.json({ error: getErrorMessage(err) }, { status: 400 });
+  }
+};
 
 export const DELETE = async (req: NextRequest) => {
-    try {
-
-        const { id }: { id: string } = await req.json();
-
-        if (!id) {
-            return Response.json(
-                { error: "Product ID is required" },
-                { status: 400 }
-            );
-        }
-
-        // Delete the product from the database
-        const deletedProduct = await prisma.product.delete({
-            where: { id },
-        });
-
-        return Response.json(
-            { message: "Product deleted successfully", product: deletedProduct },
-            { status: 200 }
-        );
-    } catch (err: unknown) {
-         const message =
-    err instanceof Error ? err.message : "Unknown error";
-
-        return Response.json(
-            { error:message },
-            { status: 400 }
-        );
-    }
+  try {
+    const { id } = await req.json();
+    if (!id) return Response.json({ error: "Product ID is required" }, { status: 400 });
+    const deleted = await prisma.product.delete({ where: { id } });
+    return Response.json({ message: "Deleted", product: deleted });
+  } catch (err: unknown) {
+    return Response.json({ error: getErrorMessage(err) }, { status: 400 });
+  }
 };
-

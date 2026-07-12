@@ -1,11 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-
-type User = {
-  id: string;
-  name: string;
-  email: string;
-  phoneNumber: string;
-};
+import { User } from "@/types/user";
 
 const API_URL = "http://localhost:3000/api/admin/users";
 
@@ -21,14 +15,12 @@ const initialState: UserState = {
   error: null,
 };
 
-// Fetch users
 export const fetchUsers = createAsyncThunk<User[]>("users/fetch", async () => {
   const response = await fetch(API_URL);
   const data = await response.json();
-  return data.users;
+  return data.data;
 });
 
-// Add user
 export const addUser = createAsyncThunk<User, Omit<User, "id">>("users/add", async (user) => {
   const response = await fetch(API_URL, {
     method: "PUT",
@@ -39,8 +31,6 @@ export const addUser = createAsyncThunk<User, Omit<User, "id">>("users/add", asy
   return data.user;
 });
 
-
-// Update user
 export const updateUser = createAsyncThunk<User, User>("users/update", async (user) => {
   const response = await fetch(API_URL, {
     method: "PATCH",
@@ -53,10 +43,9 @@ export const updateUser = createAsyncThunk<User, User>("users/update", async (us
   }
 
   const data = await response.json();
-  return data.user;
+  return data.data;
 });
 
-// Delete user
 export const deleteUser = createAsyncThunk<{ id: string }, string>("users/delete", async (id) => {
   const response = await fetch(API_URL, {
     method: "DELETE",
@@ -65,15 +54,13 @@ export const deleteUser = createAsyncThunk<{ id: string }, string>("users/delete
   });
 
   if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Error: ${response.status} - ${errorText}`);
+    throw new Error(`Failed to delete user: ${response.statusText}`);
   }
 
-  const responseBody = await response.json();
-  return { id: responseBody.user.id };
+  const data = await response.json();
+  return { id: data.user.id };
 });
 
-// User slice
 const userSlice = createSlice({
   name: "users",
   initialState,

@@ -1,40 +1,22 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useState, useEffect, useRef } from "react";
 import {
-  Box, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, Flex, Image, Button,
-  useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Input
+  Box, Table, TableContainer, Tbody, Td, Th, Thead, Tr, Flex, Image, Button, Text,
+  useDisclosure, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody,
+  ModalFooter, Input, FormControl, FormLabel, Select, IconButton, useToast, Badge,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "@/redux/store";
-import { Oswald, Nunito } from "@next/font/google";
+import { oswald700, nunito } from "@/lib/fonts";
 import { deleteProduct, updateProduct, addProduct } from "@/redux/slices/admin/productSlice";
 import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
-import { NewProduct, Product } from "@/types/user";
+import { productValidationSchema } from "@/lib/validations";
+import { NewProduct, Product, Category } from "@/types/user";
+import { FaImage, FaTrash } from "react-icons/fa";
 
-const oswald = Oswald({ weight: "700", subsets: ["latin-ext"] });
-const nunito = Nunito({ weight: "400", subsets: ["latin-ext"] });
-
-// Utility function to convert title to slug
-const generateSlug = (title: string) => {
-  return title
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^\w-]+/g, "");
-};
-
-const addProductSchema = Yup.object().shape({
-  title: Yup.string().required("Title is Required"),
-  description: Yup.string().required("Description is Required"),
-  imgUrl: Yup.string().required("Image URL is Required"),
-  price: Yup.number().min(1, "Price should be greater than 1").required("Price is Required"),
-});
-
-const updateProductSchema = Yup.object().shape({
-  title: Yup.string().required("Title is Required"),
-  description: Yup.string().required("Description is Required"),
-  imgUrl: Yup.string().required("Image URL is Required"),
-  price: Yup.number().min(1, "Price should be greater than 1").required("Price is Required"),
-});
+const generateSlug = (title: string) =>
+  title.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]+/g, "");
 
 export default function ProductTable({ products: initialProducts }: { products: Product[] }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -42,11 +24,40 @@ export default function ProductTable({ products: initialProducts }: { products: 
   const [products, setProducts] = useState<Product[]>(initialProducts);
   const [editing, setEditing] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const toast = useToast();
+
+  useEffect(() => {
+    fetch("/api/admin/categories")
+      .then((r) => r.json())
+      .then((d) => setCategories(d.categories || []))
+      .catch(() => {});
+  }, []);
+
+  const handleImageUpload = async (file: File, setFieldValue: (field: string, value: string) => void) => {
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const r = await fetch("/api/admin/upload", { method: "POST", body: formData });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || "Upload failed");
+      setFieldValue("imgUrl", d.url);
+      toast({ title: "Image uploaded!", status: "success", duration: 2000 });
+    } catch (e: unknown) {
+      toast({ title: e instanceof Error ? e.message : "Upload failed", status: "error" });
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const deleteData = async (id: string) => {
     try {
       await dispatch(deleteProduct(id)).unwrap();
-      setProducts(products.filter((product) => product.id !== id)); // Update state locally
+      setProducts(products.filter((p) => p.id !== id));
+      toast({ title: "Product deleted", status: "info", duration: 2000 });
     } catch (err) {
       console.error("Failed to delete product:", err);
     }
@@ -67,8 +78,9 @@ export default function ProductTable({ products: initialProducts }: { products: 
   const addData = async (values: NewProduct) => {
     try {
       const newProduct = await dispatch(addProduct(values)).unwrap();
-      setProducts([...products, newProduct]); // Add new product locally
+      setProducts([{ ...newProduct, category: categories.find((c) => c.id === newProduct.categoryId) || null }, ...products]);
       onClose();
+      toast({ title: "Product added!", status: "success", duration: 2000 });
     } catch (err) {
       console.error("Failed to add product:", err);
     }
@@ -77,75 +89,53 @@ export default function ProductTable({ products: initialProducts }: { products: 
   const updateData = async (values: Product) => {
     try {
       const updatedProduct = await dispatch(updateProduct(values)).unwrap();
-      setProducts(
-        products.map((product) =>
-          product.id === updatedProduct.id ? updatedProduct : product
-        )
-      );
+      setProducts(products.map((p) => (p.id === updatedProduct.id ? { ...updatedProduct, category: categories.find((c) => c.id === updatedProduct.categoryId) || null } : p)));
       onClose();
+      toast({ title: "Product updated!", status: "success", duration: 2000 });
     } catch (err) {
       console.error("Failed to update product:", err);
     }
   };
 
   return (
-    <Flex justify="center" align="center" h="100%">
-      <Box
-        w="100%"
-        overflowX="auto"
-        border="1px solid teal"
-        p={4}
-        borderRadius="md"
-        boxShadow="xl"
-        sx={{ fontFamily: nunito.style.fontFamily }}
-      >
-        <Button colorScheme="teal" onClick={openAddModal} mb={4}>
-          Add Product
-        </Button>
+    <Flex justify="center" align="start" h="100%">
+      <Box w="100%" overflowX="auto" border="1px solid teal" p={4} borderRadius="md" boxShadow="xl" sx={{ fontFamily: nunito.style.fontFamily }}>
+        <Flex justify="space-between" align="center" mb={4}>
+          <Text className={oswald700.className} fontSize="xl" fontWeight="bold">Products ({products.length})</Text>
+          <Button colorScheme="teal" onClick={openAddModal}>Add Product</Button>
+        </Flex>
+
         <TableContainer>
-          <Table variant="striped" colorScheme="teal">
-            <TableCaption className={oswald.className}>Product List</TableCaption>
+          <Table variant="striped" colorScheme="teal" size="sm">
             <Thead>
               <Tr>
-                <Th className={oswald.className}>Title</Th>
-                <Th className={oswald.className}>Price</Th>
-                <Th className={oswald.className}>Description</Th>
-                <Th className={oswald.className}>Image URL</Th>
-                <Th className={oswald.className}>Actions</Th>
+                <Th>Image</Th>
+                <Th>Title</Th>
+                <Th>Category</Th>
+                <Th>Price</Th>
+                <Th>Description</Th>
+                <Th>Actions</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {products.map((item: Product) => (
+              {products.map((item) => (
                 <Tr key={item.id}>
-                  <Td>{item.title}</Td>
-                  <Td>{item.price}Pkr</Td>
-                  <Td whiteSpace="normal" w="300px">
-                    {item.description}
-                  </Td>
-                  <Td whiteSpace="normal" maxWidth="400px" wordBreak="break-word">
-                    <Image
-                      borderRadius="12px"
-                      src={item.imgUrl}
-                      alt={item.title}
-                      maxWidth="150px"
-                    />
-                  </Td>
                   <Td>
-                    <Button
-                      size="sm"
-                      colorScheme="blue"
-                      onClick={() => openEditModal(item)}
-                      mr={2}
-                    >
-                      Edit
-                    </Button>
-                    <Button
-                      size="sm"
-                      colorScheme="red"
-                      onClick={() => deleteData(item.id)}
-                    >
-                      Delete
-                    </Button>
+                    <Image borderRadius="8px" src={item.imgUrl} alt={item.title} maxWidth="80px" h="60px" objectFit="cover" />
+                  </Td>
+                  <Td fontWeight="bold">{item.title}</Td>
+                  <Td>
+                    {item.category ? (
+                      <Badge colorScheme="teal" borderRadius="full">{item.category.name}</Badge>
+                    ) : (
+                      <Badge colorScheme="gray" borderRadius="full">Uncategorized</Badge>
+                    )}
+                  </Td>
+                  <Td fontWeight="bold" color="green.600">Rs. {item.price.toLocaleString()}</Td>
+                  <Td whiteSpace="normal" maxW="200px" fontSize="sm">{item.description}</Td>
+                  <Td>
+                    <Button size="xs" colorScheme="blue" onClick={() => openEditModal(item)} mr={1}>Edit</Button>
+                    <Button size="xs" colorScheme="red" onClick={() => deleteData(item.id)}>Delete</Button>
                   </Td>
                 </Tr>
               ))}
@@ -154,76 +144,133 @@ export default function ProductTable({ products: initialProducts }: { products: 
         </TableContainer>
       </Box>
 
-      {/* Modal for Add or Edit Product */}
-      <Modal isOpen={isOpen} onClose={onClose}>
+      {/* Add / Edit Modal */}
+      <Modal isOpen={isOpen} onClose={onClose} size="lg" scrollBehavior="inside">
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>{editing ? "Edit Product" : "Add Product"}</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody pb={6}>
             <Formik
               initialValues={{
                 title: selectedProduct?.title || "",
                 price: selectedProduct?.price || 0,
                 description: selectedProduct?.description || "",
                 imgUrl: selectedProduct?.imgUrl || "",
+                categoryId: selectedProduct?.categoryId || "",
               }}
-              validationSchema={editing ? updateProductSchema : addProductSchema}
+              validationSchema={productValidationSchema}
               onSubmit={(values) => {
-                const productWithSlug = { ...values, slug: generateSlug(values.title) };
+                const productWithSlug = { ...values, slug: generateSlug(values.title), categoryId: values.categoryId || undefined };
                 if (editing && selectedProduct) {
-                  const updatedProduct = { ...productWithSlug, id: selectedProduct.id };
-                  updateData(updatedProduct);
+                  updateData({ ...productWithSlug, id: selectedProduct.id });
                 } else {
                   addData(productWithSlug);
                 }
               }}
             >
-              {({ values, handleChange, handleBlur, errors, touched }) => (
+              {({ values, handleChange, handleBlur, errors, touched, setFieldValue }) => (
                 <Form>
-                  <Field
-                    name="title"
-                    as={Input}
-                    placeholder="Title"
-                    value={values.title}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.title && !!errors.title}
-                    mb={2}
-                  />
-                  <Field
-                    name="price"
-                    as={Input}
-                    type="number"
-                    placeholder="Price"
-                    value={values.price}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.price && !!errors.price}
-                    mb={2}
-                  />
-                  <Field
-                    name="description"
-                    as={Input}
-                    placeholder="Description"
-                    value={values.description}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.description && !!errors.description}
-                    mb={2}
-                  />
-                  <Field
-                    name="imgUrl"
-                    as={Input}
-                    placeholder="Image URL"
-                    value={values.imgUrl}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                    isInvalid={touched.imgUrl && !!errors.imgUrl}
-                    mb={2}
-                  />
-                  <ModalFooter>
-                    <Button type="submit" colorScheme="teal">
+                  <Flex direction="column" gap={4}>
+                    {/* Image Upload */}
+                    <FormControl>
+                      <FormLabel fontWeight="bold" fontSize="sm">Product Image</FormLabel>
+                      {values.imgUrl ? (
+                        <Box position="relative" display="inline-block">
+                          <Image src={values.imgUrl} alt="Preview" maxH="180px" borderRadius="12px" boxShadow="md" />
+                          <IconButton
+                            aria-label="Remove image"
+                            icon={<FaTrash />}
+                            size="xs"
+                            colorScheme="red"
+                            position="absolute"
+                            top={2}
+                            right={2}
+                            onClick={() => setFieldValue("imgUrl", "")}
+                          />
+                        </Box>
+                      ) : (
+                        <Box
+                          border="2px dashed"
+                          borderColor="gray.300"
+                          borderRadius="12px"
+                          p={8}
+                          textAlign="center"
+                          cursor="pointer"
+                          _hover={{ borderColor: "teal.400", bg: "gray.50" }}
+                          onClick={() => fileInputRef.current?.click()}
+                        >
+                          <FaImage size={32} color="gray.400" />
+                          <Text mt={2} color="gray.500" fontSize="sm">
+                            {uploading ? "Uploading..." : "Click to select image from PC"}
+                          </Text>
+                          <Text mt={1} color="gray.400" fontSize="xs">JPG, PNG, WEBP or GIF (max 5MB)</Text>
+                        </Box>
+                      )}
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleImageUpload(file, setFieldValue);
+                          e.target.value = "";
+                        }}
+                      />
+                    </FormControl>
+
+                    {/* Or manual URL */}
+                    {values.imgUrl && (
+                      <FormControl>
+                        <FormLabel fontWeight="bold" fontSize="sm">Or paste image URL</FormLabel>
+                        <Field
+                          name="imgUrl"
+                          as={Input}
+                          placeholder="https://example.com/image.jpg"
+                          value={values.imgUrl}
+                          onChange={handleChange}
+                          onBlur={handleBlur}
+                        />
+                      </FormControl>
+                    )}
+
+                    {/* Title */}
+                    <FormControl isInvalid={touched.title && !!errors.title}>
+                      <FormLabel fontWeight="bold" fontSize="sm">Title</FormLabel>
+                      <Field name="title" as={Input} placeholder="Product title" value={values.title} onChange={handleChange} onBlur={handleBlur} />
+                    </FormControl>
+
+                    {/* Price */}
+                    <FormControl isInvalid={touched.price && !!errors.price}>
+                      <FormLabel fontWeight="bold" fontSize="sm">Price (Rs.)</FormLabel>
+                      <Field name="price" as={Input} type="number" placeholder="0" value={values.price} onChange={handleChange} onBlur={handleBlur} />
+                    </FormControl>
+
+                    {/* Category */}
+                    <FormControl>
+                      <FormLabel fontWeight="bold" fontSize="sm">Category</FormLabel>
+                      <Select
+                        placeholder="Select category..."
+                        value={values.categoryId}
+                        onChange={(e) => setFieldValue("categoryId", e.target.value || "")}
+                      >
+                        {categories.map((cat) => (
+                          <option key={cat.id} value={cat.id}>{cat.name}</option>
+                        ))}
+                      </Select>
+                    </FormControl>
+
+                    {/* Description */}
+                    <FormControl isInvalid={touched.description && !!errors.description}>
+                      <FormLabel fontWeight="bold" fontSize="sm">Description</FormLabel>
+                      <Field name="description" as={Input} placeholder="Product description" value={values.description} onChange={handleChange} onBlur={handleBlur} />
+                    </FormControl>
+                  </Flex>
+
+                  <ModalFooter px={0} mt={4}>
+                    <Button variant="ghost" mr={3} onClick={onClose}>Cancel</Button>
+                    <Button type="submit" colorScheme="teal" isLoading={uploading}>
                       {editing ? "Update Product" : "Add Product"}
                     </Button>
                   </ModalFooter>

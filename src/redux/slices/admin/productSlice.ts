@@ -1,9 +1,7 @@
 import { NewProduct, Product } from "@/types/user";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
-
 const API_URL = "http://localhost:3000/api/admin/products";
-
 
 interface ProductState {
   products: Product[];
@@ -11,13 +9,11 @@ interface ProductState {
   error: string | null;
 }
 
-
 const initialState: ProductState = {
   products: [],
   loading: false,
   error: null,
 };
-
 
 export const fetchProducts = createAsyncThunk<Product[]>(
   "products/fetch",
@@ -28,11 +24,9 @@ export const fetchProducts = createAsyncThunk<Product[]>(
   }
 );
 
-
 export const addProduct = createAsyncThunk<Product, NewProduct>(
   "products/add",
   async (product) => {
-    console.log("product", product)
     const response = await fetch(API_URL, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
@@ -43,12 +37,9 @@ export const addProduct = createAsyncThunk<Product, NewProduct>(
   }
 );
 
-
 export const updateProduct = createAsyncThunk<Product, Product>(
   "products/update",
   async (product) => {
-    console.log("product",product)
-    console.log("update product", product);
     const response = await fetch(API_URL, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -60,14 +51,9 @@ export const updateProduct = createAsyncThunk<Product, Product>(
     }
 
     const data = await response.json();
-    console.log("updatedProduct", data.product);
-    return data.product; 
+    return data.product;
   }
 );
-
-
-
-
 
 export const deleteProduct = createAsyncThunk<{ id: string }, string>(
   "products/delete",
@@ -79,19 +65,13 @@ export const deleteProduct = createAsyncThunk<{ id: string }, string>(
     });
 
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Error: ${response.status} - ${errorText}`);
+      throw new Error(`Failed to delete product: ${response.statusText}`);
     }
 
-
-    const responseBody = await response.json();
-    console.log("Response Body:", responseBody);
-
-    return { id: responseBody.product.id };
+    const data = await response.json();
+    return { id: data.product.id };
   }
 );
-
-
 
 const productSlice = createSlice({
   name: "products",

@@ -1,15 +1,7 @@
-import Shop from "@/components/ShopPage/Shop";
-import { Box} from "@chakra-ui/react";
+import ShopClient from "@/components/ShopPage/ShopClient";
 
-
-
+export const dynamic = "force-dynamic";
 
 export default function ShopPage() {
-  
-
-  return (
-    <Box>
-      <Shop/>
-    </Box>
-  );
+  return <ShopClient />;
 }
