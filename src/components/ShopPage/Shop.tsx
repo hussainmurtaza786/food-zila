@@ -38,7 +38,7 @@ export default async function Shop() {
           </Text>
 
           <Text fontSize="20px" color="gray.500">
-            ${item.price}
+            {item.price}PKR
           </Text>
 
           <Text mt={2} noOfLines={2}>
