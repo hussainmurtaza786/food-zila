@@ -8,6 +8,8 @@ import WhyChooseUs from "@/components/HomePage/WhyChooseUs";
 import ReservationForm from "@/components/HomePage/ReservationForm";
 import { Box } from "@chakra-ui/react";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const [featuredProducts, categories] = await Promise.all([
     prisma.product.findMany({

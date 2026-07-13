@@ -10,7 +10,7 @@ export const GET = async () => {
   return Response.json({ orders });
 };
 
-export const PATCH = async (req: NextRequest) => {
+export const PUT = async (req: NextRequest) => {
   try {
     const { id, status } = await req.json();
     if (!id || !status) {

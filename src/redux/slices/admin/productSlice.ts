@@ -1,7 +1,7 @@
 import { NewProduct, Product } from "@/types/user";
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 
-const API_URL = "http://localhost:3000/api/admin/products";
+const API_URL = "/api/admin/products";
 
 interface ProductState {
   products: Product[];
@@ -28,7 +28,7 @@ export const addProduct = createAsyncThunk<Product, NewProduct>(
   "products/add",
   async (product) => {
     const response = await fetch(API_URL, {
-      method: "PUT",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(product),
     });

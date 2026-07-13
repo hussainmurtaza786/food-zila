@@ -10,14 +10,15 @@ export const GET = async () => {
   return Response.json({ categories });
 };
 
-export const PUT = async (req: NextRequest) => {
+export const POST = async (req: NextRequest) => {
   try {
     const { name, slug, description, image } = await req.json();
-    if (!name || !slug) {
-      return NextResponse.json({ error: "Name and slug are required" }, { status: 400 });
+    if (!name) {
+      return NextResponse.json({ error: "Name is required" }, { status: 400 });
     }
+    const categorySlug = slug || name.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]+/g, "");
     const category = await prisma.category.create({
-      data: { name, slug, description, image },
+      data: { name, slug: categorySlug, description, image },
     });
     return Response.json({ category }, { status: 201 });
   } catch (err: unknown) {

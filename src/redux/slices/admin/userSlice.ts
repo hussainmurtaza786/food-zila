@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { User } from "@/types/user";
 
-const API_URL = "http://localhost:3000/api/admin/users";
+const API_URL = "/api/admin/users";
 
 interface UserState {
   users: User[];

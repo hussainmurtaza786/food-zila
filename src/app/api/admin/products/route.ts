@@ -10,7 +10,7 @@ export const GET = async () => {
   return Response.json({ products });
 };
 
-export const PUT = async (req: NextRequest) => {
+export const POST = async (req: NextRequest) => {
   try {
     const { slug, price, title, imgUrl, description, categoryId } = await req.json();
     const product = await prisma.product.create({

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import {
   Box, Table, TableCaption, TableContainer, Tbody, Td, Th, Thead, Tr, Flex, Button,
