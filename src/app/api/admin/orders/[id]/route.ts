@@ -2,6 +2,8 @@ import { prisma } from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getErrorMessage } from "@/lib/api-helpers";
 
+export const dynamic = "force-dynamic";
+
 export const PATCH = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const { status } = await req.json();

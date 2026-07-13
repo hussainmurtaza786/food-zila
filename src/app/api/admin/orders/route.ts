@@ -2,6 +2,8 @@ import { prisma } from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { getErrorMessage } from "@/lib/api-helpers";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async () => {
   const orders = await prisma.order.findMany({
     include: { items: { include: { product: true } }, customer: { select: { id: true, name: true, email: true } } },

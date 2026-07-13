@@ -4,6 +4,8 @@ import { getErrorMessage } from "@/lib/api-helpers";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+export const dynamic = "force-dynamic";
+
 const JWT_SECRET = process.env.JWT_SECRET || "foodzilla-secret-key";
 
 export const PUT = async (req: NextRequest) => {

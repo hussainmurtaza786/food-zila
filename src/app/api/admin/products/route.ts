@@ -2,6 +2,8 @@ import { prisma } from "@/prisma/client";
 import { NextRequest } from "next/server";
 import { getErrorMessage } from "@/lib/api-helpers";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async () => {
   const products = await prisma.product.findMany({
     include: { category: true },

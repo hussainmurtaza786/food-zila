@@ -1,5 +1,7 @@
 import { prisma } from "@/prisma/client";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async () => {
   const categories = await prisma.category.findMany({
     include: { _count: { select: { products: true } } },

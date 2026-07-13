@@ -5,6 +5,8 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "@/lib/jwt";
 import { getErrorMessage } from "@/lib/api-helpers";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async () => {
   const users = await prisma.adminUser.findMany({});
   return Response.json({ data: users });

@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { verifyToken } from "@/lib/jwt";
 import { getErrorMessage } from "@/lib/api-helpers";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     const token = req.cookies.get("foodzilla-auth-token")?.value ||

@@ -4,6 +4,8 @@ import bcrypt from "bcryptjs";
 import { generateToken } from "@/lib/jwt";
 import { getErrorMessage } from "@/lib/api-helpers";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();

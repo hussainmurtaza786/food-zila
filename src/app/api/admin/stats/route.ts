@@ -1,5 +1,7 @@
 import { prisma } from "@/prisma/client";
 
+export const dynamic = "force-dynamic";
+
 export const GET = async () => {
   const [totalOrders, totalCustomers, totalProducts, revenueResult] = await Promise.all([
     prisma.order.count(),
